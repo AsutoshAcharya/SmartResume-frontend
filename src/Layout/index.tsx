@@ -5,7 +5,9 @@ const Layout = () => {
   return (
     <div className="flex flex-row h-screen w-screen">
       <SideBar />
-      <Outlet />
+      <div className="grow h-full">
+        <Outlet />
+      </div>
     </div>
   );
 };

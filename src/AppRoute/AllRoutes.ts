@@ -2,9 +2,9 @@ import { lazy } from "react";
 import { AppRoute } from "./type";
 const Main = lazy(() => import("../screens/Main"));
 const Home = lazy(() => import("../screens/Home"));
-
+const Settings = lazy(() => import("../screens/Settings"));
 export type PublicRouteKeys = "MAIN";
-export type PrivateRouteKeys = "HOME";
+export type PrivateRouteKeys = "HOME" | "SETTINGS";
 // export type IndependentRouteKeys = "";
 
 class AllRoutes {
@@ -20,6 +20,11 @@ class AllRoutes {
       title: "Home",
       path: "/home",
       Element: Home,
+    },
+    SETTINGS: {
+      title: "Settings",
+      path: "/settings",
+      Element: Settings,
     },
   };
   static INDEPENDENT: Record<string, AppRoute> = {};

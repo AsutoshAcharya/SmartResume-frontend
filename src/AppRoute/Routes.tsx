@@ -16,7 +16,7 @@ const AppRoutes = () => {
     <>
       <BrowserRouter>
         <Routes>
-          {false && (
+          {true && (
             <Route path="/" element={<Layout />}>
               {allPrivateRputes.map(GetRoute)}
             </Route>
