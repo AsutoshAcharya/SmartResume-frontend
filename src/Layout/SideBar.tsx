@@ -18,7 +18,7 @@ const SideBar = () => {
   ];
   return (
     <div className="w-64 flex flex-col flex-shrink-0 h-full border-r-1 border-gray-200 p-2">
-      <div className="flex w-full flex-row items-center gap-2 p-4 text-2xl font-bold border-b-1 border-gray-200">
+      <div className="flex w-full flex-row items-center gap-2 p-2 text-2xl font-bold border-b-1 border-gray-200">
         <FileText className="text-blue-500" />{" "}
         <p className="text-blue-500 text-xl">Smart Resume</p>
         <div className="grow" />
