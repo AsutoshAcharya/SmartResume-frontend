@@ -3,6 +3,7 @@ import Text from "../../Components/Text";
 import ResumeCard from "./ResumeCard";
 import SearchFIeld from "../../Components/SearchField";
 import { useState } from "react";
+import AddResume from "./AddResume";
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -32,6 +33,7 @@ const Home = () => {
           onDelete={() => {}}
         />
       </div>
+      <AddResume isOpen={true} onClose={() => {}} />
     </div>
   );
 };
