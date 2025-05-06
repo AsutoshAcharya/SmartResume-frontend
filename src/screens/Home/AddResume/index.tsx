@@ -8,12 +8,11 @@ import {
   FileText,
   X,
 } from "lucide-react";
-import clsx from "clsx";
 import { PersonalInfo as PersonalInfoType, ResumeForm, Step } from "../type";
-
 import PersonalInfo from "./PersonalInfo";
 import Stepper from "./Stepper";
 import Text from "../../../Components/Text";
+import { Button } from "../../../Components/Button";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -25,16 +24,11 @@ export const steps: Array<Step> = [
 ];
 
 interface Props {
-  isOpen: boolean;
+  open: boolean;
   onClose: () => void;
 }
 
-const btnPrimaryClass =
-  "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer";
-const btnSecondaryClass =
-  "bg-gray-200 text-gray-800 px-4 py-2 rounded ursor-pointer";
-
-const AddResume = ({ isOpen, onClose }: Props) => {
+const AddResume = ({ open, onClose }: Props) => {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState<ResumeForm>({
     id: "",
@@ -71,7 +65,7 @@ const AddResume = ({ isOpen, onClose }: Props) => {
     }));
   };
 
-  if (!isOpen) return null;
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 p-4 overflow-y-auto">
@@ -97,15 +91,15 @@ const AddResume = ({ isOpen, onClose }: Props) => {
         </div>
 
         <div className="flex justify-between mt-6">
-          <button
-            className={clsx("btn-secondary", btnSecondaryClass)}
+          <Button
+            variant="secondary"
             onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
             disabled={step === 0}
           >
             Back
-          </button>
-          <button
-            className={clsx("btn-primary", btnPrimaryClass)}
+          </Button>
+          <Button
+            variant="primary"
             onClick={() =>
               step === steps.length - 1
                 ? onClose()
@@ -113,7 +107,7 @@ const AddResume = ({ isOpen, onClose }: Props) => {
             }
           >
             {step === steps.length - 1 ? "Submit" : "Next"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

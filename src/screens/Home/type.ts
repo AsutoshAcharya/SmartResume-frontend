@@ -66,3 +66,11 @@ export type ResumeForm = {
     others: Array<OtherInfo>;
   };
 };
+export type InputType = "text" | "textarea" | "number" | "date" | "radio";
+export type Field = {
+  label?: string;
+  type: InputType;
+  key: Exclude<keyof PersonalInfo, "links">;
+  placeholder?: string;
+  maxLength?: number;
+};

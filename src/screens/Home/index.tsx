@@ -4,12 +4,15 @@ import ResumeCard from "./ResumeCard";
 import SearchFIeld from "../../Components/SearchField";
 import { useState } from "react";
 import AddResume from "./AddResume";
+import clsx from "clsx";
+import { Button } from "../../Components/Button";
 
 const Home = () => {
   const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
   return (
     <div className="h-full p-4">
-      <div className="flex justify-between items-center">
+      <div className="flex items-center gap-4">
         <div className="flex flex-row items-center gap-4">
           <Text
             children="Hello,John"
@@ -19,7 +22,13 @@ const Home = () => {
           />
           <SearchFIeld value={search} onChange={(val) => setSearch(val)} />
         </div>
-        <div className="flex w-7 h-7 justify-center items-center bg-blue-300 rounded-full">
+        <div className="grow" />
+        <div className="flex flex-row items-center justify-center gap-4">
+          <Button variant="primary" onClick={() => setOpen(true)}>
+            + Add Resume
+          </Button>
+        </div>
+        <div className="flex w-7 h-7 justify-center items-center gap-4 bg-blue-300 rounded-full">
           <User className="text-blue-600" />
         </div>
       </div>
@@ -33,7 +42,7 @@ const Home = () => {
           onDelete={() => {}}
         />
       </div>
-      <AddResume isOpen={true} onClose={() => {}} />
+      <AddResume open={open} onClose={() => setOpen(false)} />
     </div>
   );
 };
