@@ -13,6 +13,8 @@ import PersonalInfo from "./PersonalInfo";
 import Stepper from "./Stepper";
 import Text from "../../../Components/Text";
 import { Button } from "../../../Components/Button";
+import { emptyExperience, emptyResumeFormData } from "./DataField";
+import ExperienceInfo from "./ExperienceInfo";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -30,24 +32,7 @@ interface Props {
 
 const AddResume = ({ open, onClose }: Props) => {
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState<ResumeForm>({
-    id: "",
-    title: "",
-    resume: {
-      personalInfo: {
-        name: "",
-        address: "",
-        phone: "",
-        email: "",
-        links: [],
-      },
-      experience: [],
-      projects: [],
-      skills: {},
-      education: [],
-      others: [],
-    },
-  });
+  const [formData, setFormData] = useState<ResumeForm>(emptyResumeFormData);
 
   const updatePersonalInfo = (
     field: keyof PersonalInfoType,
@@ -64,6 +49,18 @@ const AddResume = ({ open, onClose }: Props) => {
       },
     }));
   };
+  function handleExperienceAddOrRemove(type: "add" | "remove", index?: number) {
+    setFormData((prev) => ({
+      ...prev,
+      resume: {
+        ...prev.resume,
+        experience:
+          type === "add"
+            ? prev.resume.experience.concat(emptyExperience)
+            : prev.resume.experience.filter((_r, idx) => idx !== index),
+      },
+    }));
+  }
 
   if (!open) return null;
 
@@ -82,12 +79,24 @@ const AddResume = ({ open, onClose }: Props) => {
 
         <div className="mb-4">
           <Stepper steps={steps} current={step} />
-          {step === 0 && (
-            <PersonalInfo
-              data={formData.resume.personalInfo}
-              update={updatePersonalInfo}
-            />
-          )}
+          <div className="overflow-y-auto max-h-[60vh]">
+            {step === 0 && (
+              <PersonalInfo
+                data={formData.resume.personalInfo}
+                update={updatePersonalInfo}
+              />
+            )}
+            {step === 1 && (
+              <ExperienceInfo
+                experiences={formData.resume.experience}
+                updateExperience={(idx, key, value) => {}}
+                addExperience={() => handleExperienceAddOrRemove("add")}
+                removeExperience={(idx) => {
+                  handleExperienceAddOrRemove("remove", idx);
+                }}
+              />
+            )}
+          </div>
         </div>
 
         <div className="flex justify-between mt-6">

@@ -1,9 +1,8 @@
-import React from "react";
 import { InputType } from "../screens/Home/type";
 
-type TextFieldProps = {
-  type: InputType;
-  value: string;
+type TextFieldProps<T> = {
+  type?: InputType;
+  value: T;
   onChange: (value: string) => void;
   placeholder?: string;
   label?: string;
@@ -14,7 +13,7 @@ type TextFieldProps = {
   maxLength?: number;
 };
 
-export const TextField: React.FC<TextFieldProps> = ({
+export const TextField = <T,>({
   type = "text",
   value,
   onChange,
@@ -25,18 +24,18 @@ export const TextField: React.FC<TextFieldProps> = ({
   required = false,
   error,
   maxLength,
-}) => {
+}: TextFieldProps<T>) => {
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label htmlFor={label} className="text-sm font-medium text-gray-700">
+        <label className="text-sm font-medium text-gray-700">
           {label} {required && "*"}
         </label>
       )}
       <input
         id={label}
         type={type}
-        value={value}
+        value={String(value)}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}

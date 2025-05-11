@@ -1,14 +1,32 @@
-import { FC, Fragment } from "react";
-import { PersonalInfo as PersonalInfoType } from "../type";
+import { FC, Fragment, useState } from "react";
+import { PersonalInfoKeys, PersonalInfo as PersonalInfoType } from "../type";
 import { TextField } from "../../../Components/TextField";
 import { personalInfoFields } from "./DataField";
 import { Button } from "../../../Components/Button";
+import { Link as LinkIcon, Trash2 } from "lucide-react";
+
 interface Props {
   data: PersonalInfoType;
   update: (field: keyof PersonalInfoType, value: string | string[]) => void;
 }
 
 const PersonalInfo: FC<Props> = ({ data, update }) => {
+  const [link, setLink] = useState("");
+
+  const handleAddLink = () => {
+    const trimmed = link.trim();
+    if (trimmed && !data.links.includes(trimmed)) {
+      update("links", [...data.links, trimmed]);
+      setLink("");
+    }
+  };
+
+  const handleRemoveLink = (index: number) => {
+    const updatedLinks = [...data.links];
+    updatedLinks.splice(index, 1);
+    update("links", updatedLinks);
+  };
+
   return (
     <Fragment>
       <div className="grid grid-cols-2 gap-4">
@@ -17,9 +35,9 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
             <div key={key}>
               <TextField
                 type={type}
-                value={data[key]}
+                value={data[key as PersonalInfoKeys]}
                 label={label}
-                onChange={(val) => update(key, val)}
+                onChange={(val) => update(key as PersonalInfoKeys, val)}
                 placeholder={placeholder}
                 maxLength={maxLength}
                 className="border-b"
@@ -28,8 +46,55 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
           )
         )}
       </div>
-      <Button children="+ Add Links" />
+
+      <div className="mt-6">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Add Link
+        </label>
+        <div className="flex gap-2">
+          <TextField
+            type="text"
+            placeholder="https://your-link.com"
+            value={link}
+            onChange={(val) => setLink(val)}
+            className="flex-1"
+          />
+          <Button onClick={handleAddLink}>+ Add</Button>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        {data.links.length > 0 && (
+          <ul className="space-y-2">
+            {data.links.map((l, index) => (
+              <li
+                key={index}
+                className="flex items-center justify-between p-2 bg-gray-100 rounded-lg shadow-sm"
+              >
+                <div className="flex items-center gap-2 text-sm text-blue-600 break-all">
+                  <LinkIcon size={16} />
+                  <a
+                    href={l}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {l}
+                  </a>
+                </div>
+                <Button
+                  onClick={() => handleRemoveLink(index)}
+                  variant="secondary"
+                >
+                  <Trash2 size={16} className="text-red-700" />
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </Fragment>
   );
 };
+
 export default PersonalInfo;

@@ -33,8 +33,8 @@ export interface Experience {
   companyName: string;
   companyLocation: string;
   role: string;
-  dateOfJoining: Date;
-  dateOfLeaving: Date;
+  dateOfJoining: string;
+  dateOfLeaving: string;
   isCurrentlyEmployed: boolean;
   descriptions: Array<string>;
 }
@@ -66,11 +66,21 @@ export type ResumeForm = {
     others: Array<OtherInfo>;
   };
 };
-export type InputType = "text" | "textarea" | "number" | "date" | "radio";
+export type InputType =
+  | "text"
+  | "textarea"
+  | "number"
+  | "date"
+  | "radio"
+  | "question";
+export type PersonalInfoKeys = Exclude<keyof PersonalInfo, "links">;
+export type ExperienceInfoKeys = Exclude<keyof Experience, "descriptions">;
+
 export type Field = {
   label?: string;
   type: InputType;
-  key: Exclude<keyof PersonalInfo, "links">;
+  key: PersonalInfoKeys | ExperienceInfoKeys;
   placeholder?: string;
   maxLength?: number;
+  required?: boolean;
 };
