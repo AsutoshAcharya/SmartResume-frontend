@@ -66,6 +66,7 @@ export const personalInfoFields: Array<Field> = [
     key: "phone",
     type: "number",
     placeholder: "Enter phone no.",
+    maxLength: 10,
   },
   {
     label: "Email",
@@ -174,14 +175,16 @@ export const educationDataFields: Array<Field> = [
   {
     label: "Total Marks",
     key: "totalMarks",
-    type: "text",
+    type: "number",
     placeholder: "Enter total marks or total CGPA",
+    maxLength: 5,
   },
   {
     label: "Marks Secured",
     key: "markSecured",
-    type: "text",
+    type: "number",
     placeholder: "Enter marks secured",
+    maxLength: 5,
   },
 ];
 

@@ -34,10 +34,18 @@ export const TextField = <T,>({
       )}
       <input
         id={label}
-        type={type}
+        type={type === "text" || type === "number" ? "text" : type}
         value={String(value)}
         placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          if (type === "number") {
+            const regex = /^[0-9]+$/;
+            if (regex.test(e.target.value) || e.target.value === "")
+              onChange(e.target.value);
+            return;
+          }
+          onChange(e.target.value);
+        }}
         maxLength={maxLength}
         disabled={disabled}
         required={required}
