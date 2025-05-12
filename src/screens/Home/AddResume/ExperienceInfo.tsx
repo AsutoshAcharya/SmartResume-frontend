@@ -47,7 +47,7 @@ const ExperienceInfo: FC<Props> = ({
           <div className="absolute top-4 right-4">
             <button
               onClick={() => removeExperience(index)}
-              className="text-red-500 hover:text-red-700"
+              className="text-red-500 hover:text-red-700 cursor-pointer"
               title="Remove experience"
             >
               <Trash2 size={18} />
@@ -127,17 +127,19 @@ const ExperienceInfo: FC<Props> = ({
                   const updated = data.descriptions.filter((_, i) => i !== idx);
                   updateExperience(index, "descriptions", updated);
                 }}
-                className="w-full justify-between"
+                className="w-full justify-between text-cyan-950 rounded-md"
               />
             ))}
           </div>
 
-          <div className="flex items-center gap-2 p-2">
-            <TextField
+          <div className="flex items-center justify-between gap-2 p-2">
+            <textarea
               value={newDescription}
-              onChange={setNewDescription}
-              placeholder="Enter a description..."
-              className="flex-1"
+              onChange={(e) => setNewDescription(e.target.value)}
+              id="message"
+              rows={4}
+              className="block p-2.5 w-[80%] resize-none text-sm  bg-gray-50 rounded-lg border border-gray-200 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Write description about your experience"
             />
             <Button
               onClick={() => {

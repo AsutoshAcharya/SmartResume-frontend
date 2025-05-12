@@ -41,6 +41,8 @@ export interface Experience {
 export interface Project {
   title: string;
   link: string;
+  startDate: string;
+  endDate: string;
   descriptions: Array<string>;
   techStack: Array<string>;
 }

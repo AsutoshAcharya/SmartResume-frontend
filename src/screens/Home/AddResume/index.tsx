@@ -27,7 +27,7 @@ export const steps: Array<Step> = [
   { name: "Projects", Icon: Code2 },
   { name: "Education", Icon: BookOpen },
   { name: "Skills & Others", Icon: Layers3 },
-  { name: "Review", Icon: FileText },
+  // { name: "Review", Icon: FileText },
 ];
 
 interface Props {

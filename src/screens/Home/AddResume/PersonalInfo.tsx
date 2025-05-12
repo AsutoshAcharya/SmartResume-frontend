@@ -4,6 +4,7 @@ import { TextField } from "../../../Components/TextField";
 import { personalInfoFields } from "./DataField";
 import { Button } from "../../../Components/Button";
 import { Link as LinkIcon, Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 interface Props {
   data: PersonalInfoType;
@@ -14,6 +15,7 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
   const [link, setLink] = useState("");
 
   const handleAddLink = () => {
+    if (data.links.length === 3) return toast.warn("Can only add 3 links");
     const trimmed = link.trim();
     if (trimmed && !data.links.includes(trimmed)) {
       update("links", [...data.links, trimmed]);
@@ -46,26 +48,9 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
           )
         )}
       </div>
-
-      <div className="mt-6 p-2">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Add Link
-        </label>
-        <div className="flex gap-2">
-          <TextField
-            type="text"
-            placeholder="https://your-link.com"
-            value={link}
-            onChange={(val) => setLink(val)}
-            className="flex-1"
-          />
-          <Button onClick={handleAddLink}>+ Add</Button>
-        </div>
-      </div>
-
       <div className="mt-4">
         {data.links.length > 0 && (
-          <ul className="space-y-2">
+          <ul className="space-y-2 p-2">
             {data.links.map((l, index) => (
               <li
                 key={index}
@@ -82,16 +67,31 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
                     {l}
                   </a>
                 </div>
-                <Button
+                <button
                   onClick={() => handleRemoveLink(index)}
-                  variant="secondary"
+                  className="cursor-pointer"
                 >
                   <Trash2 size={16} className="text-red-700" />
-                </Button>
+                </button>
               </li>
             ))}
           </ul>
         )}
+      </div>
+      <div className="mt-6 p-2">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Add Link
+        </label>
+        <div className="flex gap-2">
+          <TextField
+            type="text"
+            placeholder="https://your-link.com"
+            value={link}
+            onChange={(val) => setLink(val)}
+            className="flex-1"
+          />
+          <Button onClick={handleAddLink}>+ Add</Button>
+        </div>
       </div>
     </Fragment>
   );
