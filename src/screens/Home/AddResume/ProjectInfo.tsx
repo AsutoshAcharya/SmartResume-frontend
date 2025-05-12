@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { Project, ProjectInfoKeys } from "../type";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "../../../Components/Button";
@@ -78,10 +78,7 @@ const ProjectInfo: FC<Props> = ({
             )}
             <div className="w-full flex flex-row justify-between items-center">
               {projectDateFields.map(
-                (
-                  { key, label, placeholder, maxLength, type, required },
-                  idx
-                ) => {
+                ({ key, label, placeholder, type, required }, idx) => {
                   return (
                     <Fragment key={key}>
                       {type === "date" && (

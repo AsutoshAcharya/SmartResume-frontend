@@ -76,10 +76,7 @@ const EducationInfo: FC<Props> = ({
             )}
             <div className="w-full flex flex-row justify-between items-center">
               {educationDateFields.map(
-                (
-                  { key, label, placeholder, maxLength, type, required },
-                  idx
-                ) => {
+                ({ key, label, placeholder, type, required }, idx) => {
                   return (
                     <Fragment key={key}>
                       {type === "date" && (

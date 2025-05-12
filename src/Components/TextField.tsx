@@ -1,3 +1,4 @@
+import { KeyboardEvent } from "react";
 import { InputType } from "../screens/Home/type";
 
 type TextFieldProps<T> = {
@@ -11,6 +12,7 @@ type TextFieldProps<T> = {
   required?: boolean;
   error?: string;
   maxLength?: number;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
 };
 
 export const TextField = <T,>({
@@ -24,6 +26,7 @@ export const TextField = <T,>({
   required = false,
   error,
   maxLength,
+  onKeyDown = (_e) => {},
 }: TextFieldProps<T>) => {
   return (
     <div className="flex flex-col gap-1">
@@ -52,6 +55,7 @@ export const TextField = <T,>({
         className={`border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
           error ? "border-red-500" : "border-gray-300"
         } ${className}`}
+        onKeyDown={(e) => onKeyDown(e)}
       />
       {error && <span className="text-sm text-red-600">{error}</span>}
     </div>

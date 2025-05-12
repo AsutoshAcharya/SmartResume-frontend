@@ -1,11 +1,11 @@
 import { User } from "lucide-react";
 import { ReactElement } from "react";
 
-export type Resume = {
-  id: string;
-  title: string;
-  updatedAt: string;
-};
+// export type Resume = {
+//   id: string;
+//   title: string;
+//   updatedAt: string;
+// };
 
 export enum State {
   Default = "Default",
@@ -64,17 +64,18 @@ export interface OtherInfo {
   title: string;
   info: Array<string>;
 }
+
+export type Resume = {
+  personalInfo: PersonalInfo;
+  experience: Array<Experience>;
+  projects: Array<Project>;
+  education: Array<Education>;
+  others: Array<OtherInfo>; //incudes skill field also
+};
 export type ResumeForm = {
   id: string;
   title: string;
-  resume: {
-    personalInfo: PersonalInfo;
-    experience: Array<Experience>;
-    projects: Array<Project>;
-    skills: Record<string, Array<string>>;
-    education: Array<Education>;
-    others: Array<OtherInfo>;
-  };
+  resume: Resume;
 };
 
 export type InputType =
@@ -92,11 +93,16 @@ export type ProjectInfoKeys = Exclude<
 >;
 
 export type EducationKeys = keyof Education;
-
+export type OtherInfoKeys = keyof OtherInfo;
 export type Field = {
   label?: string;
   type: InputType;
-  key: PersonalInfoKeys | ExperienceInfoKeys | ProjectInfoKeys | EducationKeys;
+  key:
+    | PersonalInfoKeys
+    | ExperienceInfoKeys
+    | ProjectInfoKeys
+    | EducationKeys
+    | OtherInfoKeys;
   placeholder?: string;
   maxLength?: number;
   required?: boolean;

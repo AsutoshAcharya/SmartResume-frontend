@@ -1,4 +1,11 @@
-import { Education, Experience, Field, Project, ResumeForm } from "../type";
+import {
+  Education,
+  Experience,
+  Field,
+  OtherInfo,
+  Project,
+  ResumeForm,
+} from "../type";
 
 export const emptyResumeFormData: ResumeForm = {
   id: "",
@@ -13,7 +20,6 @@ export const emptyResumeFormData: ResumeForm = {
     },
     experience: [],
     projects: [],
-    skills: {},
     education: [],
     others: [],
   },
@@ -45,6 +51,10 @@ export const emptyEducation: Education = {
   markSecured: "",
   startDate: "",
   endDate: "",
+};
+export const emptyOther: OtherInfo = {
+  title: "",
+  info: [],
 };
 
 export const personalInfoFields: Array<Field> = [
@@ -200,5 +210,15 @@ export const educationDateFields: Array<Field> = [
     key: "endDate",
     placeholder: "Enter college end date",
     type: "date",
+  },
+];
+
+export const otherFields: Array<Field> = [
+  {
+    label: "Other Info",
+    key: "title",
+    placeholder: "Enter title of other info. e.g. Skills or Language etc.",
+    type: "text",
+    maxLength: 15,
   },
 ];

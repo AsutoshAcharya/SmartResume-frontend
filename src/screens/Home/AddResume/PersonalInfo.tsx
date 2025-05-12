@@ -3,7 +3,7 @@ import { PersonalInfoKeys, PersonalInfo as PersonalInfoType } from "../type";
 import { TextField } from "../../../Components/TextField";
 import { personalInfoFields } from "./DataField";
 import { Button } from "../../../Components/Button";
-import { Link as LinkIcon, Trash2, X } from "lucide-react";
+import { Link as LinkIcon, X } from "lucide-react";
 import { toast } from "react-toastify";
 
 interface Props {

@@ -1,4 +1,4 @@
-import { FC, Fragment, createElement, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { Experience, ExperienceInfoKeys } from "../type";
 import { experienceInfoFields } from "./DataField";
 import { TextField } from "../../../Components/TextField";
@@ -81,40 +81,35 @@ const ExperienceInfo: FC<Props> = ({
             <div className="w-full flex flex-row justify-between items-center">
               {experienceInfoFields
                 .slice(3)
-                .map(
-                  (
-                    { key, label, placeholder, maxLength, type, required },
-                    idx
-                  ) => {
-                    return (
-                      <Fragment key={key}>
-                        {type === "date" && (
-                          <DateField
-                            value={
-                              data[key as ExperienceInfoKeys]?.toString()
-                                .length > 0
-                                ? new Date(
-                                    Some.String(data[key as ExperienceInfoKeys])
-                                  )
-                                : undefined
-                            } //
-                            label={label}
-                            onChange={(date) =>
-                              updateExperience(
-                                index,
-                                key as ExperienceInfoKeys,
-                                date?.toISOString()!
-                              )
-                            }
-                            placeholder={placeholder}
-                            required={required}
-                            className={idx === 1 ? "ml-5" : ""}
-                          />
-                        )}
-                      </Fragment>
-                    );
-                  }
-                )}
+                .map(({ key, label, placeholder, type, required }, idx) => {
+                  return (
+                    <Fragment key={key}>
+                      {type === "date" && (
+                        <DateField
+                          value={
+                            data[key as ExperienceInfoKeys]?.toString().length >
+                            0
+                              ? new Date(
+                                  Some.String(data[key as ExperienceInfoKeys])
+                                )
+                              : undefined
+                          } //
+                          label={label}
+                          onChange={(date) =>
+                            updateExperience(
+                              index,
+                              key as ExperienceInfoKeys,
+                              date?.toISOString()!
+                            )
+                          }
+                          placeholder={placeholder}
+                          required={required}
+                          className={idx === 1 ? "ml-5" : ""}
+                        />
+                      )}
+                    </Fragment>
+                  );
+                })}
             </div>
           </div>
 
