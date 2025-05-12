@@ -87,11 +87,11 @@ const ExperienceInfo: FC<Props> = ({
                     idx
                   ) => {
                     return (
-                      <>
+                      <Fragment key={key}>
                         {type === "date" && (
                           <DateField
                             value={
-                              data[key as ExperienceInfoKeys].toString()
+                              data[key as ExperienceInfoKeys]?.toString()
                                 .length > 0
                                 ? new Date(
                                     Some.String(data[key as ExperienceInfoKeys])
@@ -111,7 +111,7 @@ const ExperienceInfo: FC<Props> = ({
                             className={idx === 1 ? "ml-5" : ""}
                           />
                         )}
-                      </>
+                      </Fragment>
                     );
                   }
                 )}

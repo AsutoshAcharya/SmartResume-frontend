@@ -11,7 +11,7 @@ const Stepper: FC<Props> = ({ current, steps }) => {
   return (
     <div className="flex flex-row p-6 px-10">
       {steps.map((step, idx) => (
-        <Fragment>
+        <Fragment key={step.name}>
           <div className="flex flex-col gap-8 items-center">
             <div
               className={clsx(

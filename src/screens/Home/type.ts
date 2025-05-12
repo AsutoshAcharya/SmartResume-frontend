@@ -51,7 +51,7 @@ export interface Project {
 export interface Education {
   course: string;
   college: string;
-  range: { start: Date; end: Date };
+  range: { start: string; end: string };
 }
 export interface OtherInfo {
   title: string;

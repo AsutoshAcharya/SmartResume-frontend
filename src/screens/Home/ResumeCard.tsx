@@ -1,7 +1,8 @@
-import React, { FC, ReactElement, useState } from "react";
+import { FC, useState } from "react";
 import { Pencil, Eye, Download, Trash2 } from "lucide-react";
 import clsx from "clsx";
 import { Action, State } from "./type";
+import Tooltip from "../../Components/Tooltip";
 
 interface Props {
   title: string;
@@ -61,14 +62,15 @@ const ResumeCard: FC<Props> = ({
       </div>
       <div className="flex gap-2 mt-1">
         {actions.map((action) => (
-          <button
-            key={action.state}
-            onClick={action.onClick}
-            title={action.state}
-            className="p-2 rounded-md hover:bg-gray-200 cursor-pointer transition"
-          >
-            {action.Icon}
-          </button>
+          <Tooltip placement="bottom" content={action.state}>
+            <button
+              key={action.state}
+              onClick={action.onClick}
+              className="p-2 rounded-md hover:bg-gray-200 cursor-pointer transition"
+            >
+              {action.Icon}
+            </button>
+          </Tooltip>
         ))}
       </div>
     </div>

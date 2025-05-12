@@ -83,11 +83,11 @@ const ProjectInfo: FC<Props> = ({
                   idx
                 ) => {
                   return (
-                    <>
+                    <Fragment key={key}>
                       {type === "date" && (
                         <DateField
                           value={
-                            data[key as ProjectInfoKeys].toString().length > 0
+                            data[key as ProjectInfoKeys]?.toString().length > 0
                               ? new Date(
                                   Some.String(data[key as ProjectInfoKeys])
                                 )
@@ -106,7 +106,7 @@ const ProjectInfo: FC<Props> = ({
                           className={idx === 1 ? "ml-5" : ""}
                         />
                       )}
-                    </>
+                    </Fragment>
                   );
                 }
               )}
