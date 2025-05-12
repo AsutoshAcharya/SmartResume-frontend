@@ -9,6 +9,8 @@ import {
   X,
 } from "lucide-react";
 import {
+  Education,
+  EducationKeys,
   Experience,
   PersonalInfo as PersonalInfoType,
   Project,
@@ -20,12 +22,14 @@ import Stepper from "./Stepper";
 import Text from "../../../Components/Text";
 import { Button } from "../../../Components/Button";
 import {
+  emptyEducation,
   emptyExperience,
   emptyProject,
   emptyResumeFormData,
 } from "./DataField";
 import ExperienceInfo from "./ExperienceInfo";
 import ProjectInfo from "./ProjectInfo";
+import EducationInfo from "./EducationInfo";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -98,6 +102,23 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
     }));
   }
 
+  function updateEducation<T extends EducationKeys>(
+    index: number,
+    key: T,
+    value: Education[T]
+  ) {
+    setFormData((prev) => ({
+      ...prev,
+      resume: {
+        ...prev.resume,
+        education: prev.resume.education.map((ed, i) => {
+          if (i !== index) return ed;
+          return { ...ed, [key]: value };
+        }),
+      },
+    }));
+  }
+
   function handleExperienceOrProjectAddOrRemove(
     type: "add" | "remove",
     update: "experience" | "project" | "education" | "others",
@@ -121,12 +142,12 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
               : newResume.projects.filter((_r, idx) => idx !== index);
           break;
 
-        // case "education":
-        //   newResume.education =
-        //     type === "add"
-        //       ? newResume.education.concat(emptyEducation)
-        //       : newResume.education.filter((_r, idx) => idx !== index);
-        //   break;
+        case "education":
+          newResume.education =
+            type === "add"
+              ? newResume.education.concat(emptyEducation)
+              : newResume.education.filter((_r, idx) => idx !== index);
+          break;
 
         // case "others":
         //   newResume.others =
@@ -197,6 +218,22 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
                   handleExperienceOrProjectAddOrRemove(
                     "remove",
                     "project",
+                    idx
+                  );
+                }}
+              />
+            )}
+            {step === 3 && (
+              <EducationInfo
+                educations={formData.resume.education}
+                updateEducation={updateEducation}
+                addEducation={() =>
+                  handleExperienceOrProjectAddOrRemove("add", "education")
+                }
+                removeEducation={(idx) => {
+                  handleExperienceOrProjectAddOrRemove(
+                    "remove",
+                    "education",
                     idx
                   );
                 }}

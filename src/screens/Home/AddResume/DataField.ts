@@ -1,4 +1,4 @@
-import { Experience, Field, Project, ResumeForm } from "../type";
+import { Education, Experience, Field, Project, ResumeForm } from "../type";
 
 export const emptyResumeFormData: ResumeForm = {
   id: "",
@@ -36,6 +36,15 @@ export const emptyProject: Project = {
   endDate: "",
   descriptions: [],
   techStack: [],
+};
+
+export const emptyEducation: Education = {
+  course: "",
+  college: "",
+  totalMarks: "",
+  markSecured: "",
+  startDate: "",
+  endDate: "",
 };
 
 export const personalInfoFields: Array<Field> = [
@@ -144,5 +153,49 @@ export const projectDateFields: Array<Field> = [
     key: "endDate",
     type: "date",
     placeholder: "Enter project end date",
+  },
+];
+
+export const educationDataFields: Array<Field> = [
+  {
+    label: "Course Taken",
+    key: "course",
+    type: "text",
+    placeholder: "Enter course details",
+    required: true,
+  },
+  {
+    label: "College Name",
+    key: "college",
+    type: "text",
+    placeholder: "Enter college name",
+    required: true,
+  },
+  {
+    label: "Total Marks",
+    key: "totalMarks",
+    type: "text",
+    placeholder: "Enter total marks or total CGPA",
+  },
+  {
+    label: "Marks Secured",
+    key: "markSecured",
+    type: "text",
+    placeholder: "Enter marks secured",
+  },
+];
+
+export const educationDateFields: Array<Field> = [
+  {
+    label: "Start Date",
+    key: "startDate",
+    placeholder: "Enter college start date",
+    type: "date",
+  },
+  {
+    label: "End Date",
+    key: "endDate",
+    placeholder: "Enter college end date",
+    type: "date",
   },
 ];

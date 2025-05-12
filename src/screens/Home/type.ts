@@ -6,6 +6,7 @@ export type Resume = {
   title: string;
   updatedAt: string;
 };
+
 export enum State {
   Default = "Default",
   Edit = "Edit",
@@ -13,11 +14,13 @@ export enum State {
   Download = "Download",
   Delete = "Delete",
 }
+
 export type Action = {
   state: State;
   Icon: ReactElement;
   onClick: () => void;
 };
+
 export type Step = {
   name: string;
   Icon: typeof User;
@@ -51,8 +54,12 @@ export interface Project {
 export interface Education {
   course: string;
   college: string;
-  range: { start: string; end: string };
+  totalMarks: string;
+  markSecured: string;
+  startDate: string;
+  endDate: string;
 }
+
 export interface OtherInfo {
   title: string;
   info: Array<string>;
@@ -69,6 +76,7 @@ export type ResumeForm = {
     others: Array<OtherInfo>;
   };
 };
+
 export type InputType =
   | "text"
   | "textarea"
@@ -83,10 +91,12 @@ export type ProjectInfoKeys = Exclude<
   "descriptions" | "techStack"
 >;
 
+export type EducationKeys = keyof Education;
+
 export type Field = {
   label?: string;
   type: InputType;
-  key: PersonalInfoKeys | ExperienceInfoKeys | ProjectInfoKeys;
+  key: PersonalInfoKeys | ExperienceInfoKeys | ProjectInfoKeys | EducationKeys;
   placeholder?: string;
   maxLength?: number;
   required?: boolean;
