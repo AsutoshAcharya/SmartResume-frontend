@@ -8,7 +8,12 @@ import {
   FileText,
   X,
 } from "lucide-react";
-import { PersonalInfo as PersonalInfoType, ResumeForm, Step } from "../type";
+import {
+  Experience,
+  PersonalInfo as PersonalInfoType,
+  ResumeForm,
+  Step,
+} from "../type";
 import PersonalInfo from "./PersonalInfo";
 import Stepper from "./Stepper";
 import Text from "../../../Components/Text";
@@ -61,7 +66,22 @@ const AddResume = ({ open, onClose }: Props) => {
       },
     }));
   }
-
+  function updateExperience<T extends keyof Experience>(
+    index: number,
+    key: T,
+    value: Experience[T]
+  ) {
+    setFormData((prev) => ({
+      ...prev,
+      resume: {
+        ...prev.resume,
+        experience: prev.resume.experience.map((exp, i) => {
+          if (i !== index) return exp;
+          return { ...exp, [key]: value };
+        }),
+      },
+    }));
+  }
   if (!open) return null;
 
   return (
@@ -89,7 +109,7 @@ const AddResume = ({ open, onClose }: Props) => {
             {step === 1 && (
               <ExperienceInfo
                 experiences={formData.resume.experience}
-                updateExperience={(idx, key, value) => {}}
+                updateExperience={updateExperience}
                 addExperience={() => handleExperienceAddOrRemove("add")}
                 removeExperience={(idx) => {
                   handleExperienceAddOrRemove("remove", idx);

@@ -29,7 +29,7 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
 
   return (
     <Fragment>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 p-2">
         {personalInfoFields.map(
           ({ key, label, placeholder, maxLength, type }) => (
             <div key={key}>
@@ -47,7 +47,7 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
         )}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 p-2">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Add Link
         </label>

@@ -1,13 +1,13 @@
-import React, { useState, useRef } from "react";
-import { format } from "date-fns";
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
+import React from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
 type DateFieldProps = {
   label?: string;
   value?: Date;
-  onChange: (date: Date | undefined) => void;
+  onChange: (date: Date | null) => void;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
@@ -23,70 +23,35 @@ export const DateField: React.FC<DateFieldProps> = ({
   disabled = false,
   className = "",
 }) => {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  const handleClickOutside = (e: MouseEvent) => {
-    if (ref.current && !ref.current.contains(e.target as Node)) {
-      setOpen(false);
-    }
-  };
-
-  React.useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
-    <div className={`relative w-full ${className}`} ref={ref}>
+    <div className={`w-full ${className}`}>
       {label && (
-        <label className="text-sm font-medium text-gray-700">
+        <label className="text-sm font-medium text-gray-700 mb-1 block">
           {label} {required && "*"}
         </label>
       )}
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        disabled={disabled}
-        className={`flex w-full justify-between items-center border px-3 py-2 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-          disabled ? "bg-gray-100 cursor-not-allowed" : "hover:shadow-md"
-        }`}
-      >
-        <span className={`${value ? "text-gray-900" : "text-gray-400"}`}>
-          {value ? format(value, "PPP") : placeholder}
-        </span>
-        <CalendarIcon size={18} className="text-gray-500" />
-      </button>
-
-      {open && (
-        <div className="absolute z-10 mt-2 bg-white border rounded-md shadow-lg p-2">
-          <DayPicker
-            mode="single"
-            selected={value}
-            onSelect={(date) => {
-              onChange(date);
-              setOpen(false);
-            }}
-            disabled={disabled}
-            classNames={{
-              months: "flex flex-col space-y-4",
-              month: "space-y-4",
-              caption: "flex justify-between items-center px-2",
-              nav: "flex items-center gap-1",
-              nav_button:
-                "h-7 w-7 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-600",
-              table: "w-full border-collapse space-y-1",
-              head_row: "flex",
-              head_cell: "flex-1 text-xs text-center text-gray-500",
-              row: "flex w-full mt-1",
-              cell: "text-center text-sm p-1 w-9 h-9 rounded-full hover:bg-blue-100 focus:bg-blue-200 cursor-pointer",
-              day_selected: "bg-blue-500 text-white hover:bg-blue-600",
-              day_today: "border border-blue-500",
-              day_disabled: "text-gray-300 cursor-not-allowed",
-            }}
-          />
-        </div>
-      )}
+      <div className="w-full relative flex flex-row">
+        <DatePicker
+          selected={value}
+          onChange={(date) => onChange(date)}
+          disabled={disabled}
+          placeholderText={placeholder}
+          className={`w-full grow relative  border rounded border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            disabled ? "bg-gray-100 cursor-not-allowed" : "hover:shadow-md"
+          }`}
+          calendarClassName="border rounded-md shadow-lg"
+          popperPlacement="bottom-end"
+          showMonthDropdown
+          showYearDropdown
+          dropdownMode="select"
+          dateFormat="MMMM dd, yyyy"
+          popperProps={{ strategy: "fixed" }}
+        />
+        {/* <CalendarIcon
+          size={18}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+        /> */}
+      </div>
     </div>
   );
 };
