@@ -1,4 +1,4 @@
-import { Experience, Field, ResumeForm } from "../type";
+import { Experience, Field, Project, ResumeForm } from "../type";
 
 export const emptyResumeFormData: ResumeForm = {
   id: "",
@@ -26,6 +26,16 @@ export const emptyExperience: Experience = {
   dateOfLeaving: "",
   isCurrentlyEmployed: false,
   descriptions: [],
+};
+
+export const emptyProject: Project = {
+  title: "",
+  repoLink: "",
+  projectLink: "",
+  startDate: "",
+  endDate: "",
+  descriptions: [],
+  techStack: [],
 };
 
 export const personalInfoFields: Array<Field> = [
@@ -97,5 +107,42 @@ export const experienceInfoFields: Array<Field> = [
     type: "question",
     placeholder: "",
     required: false,
+  },
+];
+
+export const projectFields: Array<Field> = [
+  {
+    label: "Project Title",
+    key: "title",
+    type: "text",
+    required: true,
+    placeholder: "Enter title",
+  },
+  {
+    label: "Repository Link",
+    key: "repoLink",
+    type: "text",
+    placeholder: "Provide project repository link",
+  },
+  {
+    label: "Project Live Link",
+    key: "projectLink",
+    type: "text",
+    placeholder: "Provide project live link",
+  },
+];
+
+export const projectDateFields: Array<Field> = [
+  {
+    label: "Project Start Date",
+    key: "startDate",
+    type: "date",
+    placeholder: "Enter project start date",
+  },
+  {
+    label: "Project End Name",
+    key: "endDate",
+    type: "date",
+    placeholder: "Enter project end date",
   },
 ];

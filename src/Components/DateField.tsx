@@ -26,7 +26,7 @@ export const DateField: React.FC<DateFieldProps> = ({
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <label className="text-sm font-medium text-gray-700 mb-1 block">
+        <label className="text-sm font-medium text-gray-500 mb-1 block">
           {label} {required && "*"}
         </label>
       )}

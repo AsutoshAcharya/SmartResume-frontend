@@ -40,7 +40,8 @@ export interface Experience {
 }
 export interface Project {
   title: string;
-  link: string;
+  repoLink: string;
+  projectLink: string;
   startDate: string;
   endDate: string;
   descriptions: Array<string>;
@@ -77,11 +78,15 @@ export type InputType =
   | "question";
 export type PersonalInfoKeys = Exclude<keyof PersonalInfo, "links">;
 export type ExperienceInfoKeys = Exclude<keyof Experience, "descriptions">;
+export type ProjectInfoKeys = Exclude<
+  keyof Project,
+  "descriptions" | "techStack"
+>;
 
 export type Field = {
   label?: string;
   type: InputType;
-  key: PersonalInfoKeys | ExperienceInfoKeys;
+  key: PersonalInfoKeys | ExperienceInfoKeys | ProjectInfoKeys;
   placeholder?: string;
   maxLength?: number;
   required?: boolean;

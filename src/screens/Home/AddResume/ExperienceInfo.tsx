@@ -118,7 +118,7 @@ const ExperienceInfo: FC<Props> = ({
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 mb-4 w-full p-2">
+          <div className="flex flex-col gap-2 mb-4 w-full p-2 border-t-2 border-t-gray-400">
             {data.descriptions.map((desc, idx) => (
               <Chip
                 key={idx}
@@ -168,17 +168,3 @@ const ExperienceInfo: FC<Props> = ({
 };
 
 export default ExperienceInfo;
-
-{
-  /* <TextField
-                      type={type}
-                      value={data[key as ExperienceInfoKeys] as string}
-                      label={label}
-                      onChange={(val) =>
-                        updateExperience(index, key as ExperienceInfoKeys, val)
-                      }
-                      placeholder={placeholder}
-                      maxLength={maxLength}
-                      required={required}
-                    /> */
-}

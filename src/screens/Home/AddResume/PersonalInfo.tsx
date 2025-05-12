@@ -3,7 +3,7 @@ import { PersonalInfoKeys, PersonalInfo as PersonalInfoType } from "../type";
 import { TextField } from "../../../Components/TextField";
 import { personalInfoFields } from "./DataField";
 import { Button } from "../../../Components/Button";
-import { Link as LinkIcon, Trash2 } from "lucide-react";
+import { Link as LinkIcon, Trash2, X } from "lucide-react";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -48,15 +48,15 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
           )
         )}
       </div>
-      <div className="mt-4">
+      <div className="mt-4 border-t-2 border-t-gray-400">
         {data.links.length > 0 && (
           <ul className="space-y-2 p-2">
             {data.links.map((l, index) => (
               <li
                 key={index}
-                className="flex items-center justify-between p-2 bg-gray-100 rounded-lg shadow-sm"
+                className="flex items-center justify-between p-2 bg-gray-600 rounded-lg shadow-sm"
               >
-                <div className="flex items-center gap-2 text-sm text-blue-600 break-all">
+                <div className="flex items-center gap-2 text-sm text-white break-all">
                   <LinkIcon size={16} />
                   <a
                     href={l}
@@ -71,7 +71,7 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
                   onClick={() => handleRemoveLink(index)}
                   className="cursor-pointer"
                 >
-                  <Trash2 size={16} className="text-red-700" />
+                  <X size={16} className="text-gray-400 hover:text-gray-200" />
                 </button>
               </li>
             ))}

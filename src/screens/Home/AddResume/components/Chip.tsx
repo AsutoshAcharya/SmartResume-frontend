@@ -1,6 +1,6 @@
-import { Trash2 } from "lucide-react";
-import React, { FC } from "react";
-import { Button } from "../../../../Components/Button";
+import { X } from "lucide-react";
+import { FC } from "react";
+
 import clsx from "clsx";
 interface Props {
   item: string;
@@ -11,7 +11,7 @@ const Chip: FC<Props> = ({ item, onDelete, className }) => {
   return (
     <div
       className={clsx(
-        "flex items-center bg-[#8ecae6] text-sm px-3 py-1 rounded-full shadow-sm ",
+        "flex items-center bg-gray-600 text-sm px-3 py-1 rounded-full shadow-sm text-white",
         className
       )}
     >
@@ -20,9 +20,9 @@ const Chip: FC<Props> = ({ item, onDelete, className }) => {
       </span>
       <button
         onClick={onDelete}
-        className="ml-2 text-red-500 hover:text-red-700 cursor-pointer"
+        className="ml-2 text-gray-400 hover:text-gray-200 cursor-pointer"
       >
-        <Trash2 size={14} />
+        <X size={14} />
       </button>
     </div>
   );
