@@ -84,7 +84,8 @@ export type InputType =
   | "number"
   | "date"
   | "radio"
-  | "question";
+  | "question"
+  | "password";
 export type PersonalInfoKeys = Exclude<keyof PersonalInfo, "links">;
 export type ExperienceInfoKeys = Exclude<keyof Experience, "descriptions">;
 export type ProjectInfoKeys = Exclude<
@@ -94,7 +95,7 @@ export type ProjectInfoKeys = Exclude<
 
 export type EducationKeys = keyof Education;
 export type OtherInfoKeys = keyof OtherInfo;
-export type Field = {
+export interface Field {
   label?: string;
   type: InputType;
   key:
@@ -106,4 +107,4 @@ export type Field = {
   placeholder?: string;
   maxLength?: number;
   required?: boolean;
-};
+}
