@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { TextField } from "../../Components/TextField";
 import { emptyRegisterFormData, registerDataFields } from "./DataField";
 import { RForm } from "./type";
+import apiCall from "../../helpers/apiCall";
+import Auth from "../../services/Auth";
 
 const Register = () => {
   const [formData, setFormData] = useState<RForm>(emptyRegisterFormData);
@@ -27,7 +29,7 @@ const Register = () => {
     switch (key) {
       case "name":
         error =
-          value.length > 4
+          value.length >= 4
             ? ""
             : value.length > 50
             ? "Name is must have maximum of 50 characters"
@@ -51,6 +53,21 @@ const Register = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    // if (formData.avatar) {
+    //   let fd = new FormData();
+    //   fd.append("file", formData.avatar);
+    //   fd.append("upload_preset", "upload");
+    //   fd.append("cloud_name", "dtl3zxaep");
+    //   const apiData = {
+    //     data: fd,
+    //   };
+    //   apiCall({
+    //     fn: () => Auth.uploadFile(apiData),
+    //     onSuccess: (res) => {
+    //       console.log(res);
+    //     },
+    //   });
+    // }
     alert("Registered");
   };
 
