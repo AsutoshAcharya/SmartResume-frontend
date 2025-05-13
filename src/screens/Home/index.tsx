@@ -4,7 +4,6 @@ import ResumeCard from "./ResumeCard";
 import SearchFIeld from "../../Components/SearchField";
 import { useState } from "react";
 import AddResume from "./AddResume";
-import clsx from "clsx";
 import { Button } from "../../Components/Button";
 
 const Home = () => {

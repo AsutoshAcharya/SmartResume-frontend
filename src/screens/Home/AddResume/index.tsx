@@ -46,7 +46,7 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
   const [formData, setFormData] = useState<ResumeForm>(
     resumeFormData ?? emptyResumeFormData
   );
-
+  console.warn(formData);
   const updatePersonalInfo = (
     field: keyof PersonalInfoType,
     value: string | string[]
@@ -179,7 +179,7 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
     });
   }
 
-  if (!open) return null;
+  if (!open) return <></>;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 p-4 overflow-y-auto">
