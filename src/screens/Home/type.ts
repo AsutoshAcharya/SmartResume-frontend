@@ -107,4 +107,5 @@ export interface Field {
   placeholder?: string;
   maxLength?: number;
   required?: boolean;
+  validate?: (val: string) => boolean;
 }

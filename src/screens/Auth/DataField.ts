@@ -12,6 +12,13 @@ export const emptyRegisterFormData: RForm = {
   avatar: null as File | null,
 };
 
+export const emptyErrors = {
+  name: "",
+  email: "",
+  password: "",
+  avatar: "",
+};
+
 export const registerDataFields: Array<RField> = [
   {
     key: "name",
