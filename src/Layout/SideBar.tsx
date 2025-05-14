@@ -1,11 +1,17 @@
 import { ReactElement } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { AppRoute } from "../AppRoute/type";
 import AllRoutes from "../AppRoute/AllRoutes";
 import clsx from "clsx";
 import { FileText } from "lucide-react";
+import { useAuthStore } from "../store";
+import { Button } from "../Components/Button";
 
 const SideBar = () => {
+  const { signOut } = useAuthStore();
+  const [params] = useSearchParams();
+
+  const navigate = useNavigate();
   const sidebarRoutes: Array<AppRoute & { Icon: ReactElement }> = [
     {
       ...AllRoutes.PRIVATE.HOME,
@@ -43,9 +49,15 @@ const SideBar = () => {
         ))}
       </div>
       <div className="grow" />
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+      <Button
+        onClick={() => {
+          signOut();
+          params.set("type", "login");
+          navigate(`${AllRoutes.PUBLIC.AUTH.path}?${params.toString()}`);
+        }}
+      >
         LogOut
-      </button>
+      </Button>
     </div>
   );
 };

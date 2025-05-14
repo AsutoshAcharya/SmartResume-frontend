@@ -10,6 +10,16 @@ export type Cred = {
   avatar?: string;
 };
 
+export function toCred(data: any): Cred {
+  return {
+    userId: Some.String(data?._id),
+    name: Some.String(data?.name),
+    email: Some.String(data?.email),
+    token: Some.String(data?.token),
+    avatar: Some.String(data?.avatar),
+  };
+}
+
 export type StoreState = {
   cred: Cred;
   signIn: (cred: Cred) => void;
@@ -37,13 +47,4 @@ const useAuthStore = create<
   )
 );
 
-function toCred(data: any): Cred {
-  return {
-    userId: Some.String(data?._id),
-    name: Some.String(data?.username),
-    email: Some.String(data?.email),
-    token: Some.String(data?.token),
-    avatar: Some.String(data?.avatar),
-  };
-}
 export { useAuthStore };

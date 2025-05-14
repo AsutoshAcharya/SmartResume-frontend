@@ -1,9 +1,10 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AllRoutes, { PrivateRouteKeys, PublicRouteKeys } from "./AllRoutes";
 import { AppRoute } from "./type";
 import { Suspense } from "react";
 import Layout from "../Layout";
 import Loader from "../Components/Loader";
+import { useAuthStore } from "../store";
 
 const allPublicRoutes = Object.keys(AllRoutes.PUBLIC).map(
   (kee) => AllRoutes.PUBLIC[kee as PublicRouteKeys]
@@ -13,16 +14,26 @@ const allPrivateRputes = Object.keys(AllRoutes.PRIVATE).map(
 );
 
 const AppRoutes = () => {
+  const { cred } = useAuthStore();
   return (
     <>
       <BrowserRouter>
         <Routes>
-          {true && (
+          {cred.token ? (
             <Route path="/" element={<Layout />}>
               {allPrivateRputes.map(GetRoute)}
+              <Route
+                path="/"
+                element={<Navigate to={AllRoutes.PRIVATE.HOME.path} replace />}
+              />
             </Route>
+          ) : (
+            allPublicRoutes.map(GetRoute)
           )}
-          {allPublicRoutes.map(GetRoute)}
+          <Route
+            path="*"
+            element={<Navigate to={cred.token ? "/" : "/auth"} replace />}
+          />
         </Routes>
       </BrowserRouter>
     </>

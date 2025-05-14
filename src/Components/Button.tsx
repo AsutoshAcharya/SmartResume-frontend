@@ -1,7 +1,6 @@
 import React, { ButtonHTMLAttributes } from "react";
 import { clsx } from "clsx";
 import Loader from "./Loader";
-import WrapperLoader from "./WrapperLoader";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary";
@@ -9,7 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseClass =
-  "px-4 py-2 rounded text-sm font-medium transition duration-200 inline-flex items-center justify-center";
+  "px-4 py-2 rounded text-sm font-medium transition duration-200 inline-flex items-center justify-center cursor-pointer";
 
 const variants = {
   primary: "bg-blue-600 text-white hover:bg-blue-700",

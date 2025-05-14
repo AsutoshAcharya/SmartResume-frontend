@@ -11,22 +11,29 @@ import Text from "../../Components/Text";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AllRoutes from "../../AppRoute/AllRoutes";
 import { Button } from "../../Components/Button";
-import WrapperLoader from "../../Components/WrapperLoader";
+import apiCall from "../../helpers/apiCall";
+import AuthService from "../../services/Auth";
+import { toast } from "react-toastify";
+import { Some } from "../../helpers/Some";
+import { useAuthStore } from "../../store";
+import { toCred } from "../../store/authStore";
+
 enum AuthPage {
   Login = "login",
   Register = "register",
 }
 const Auth = () => {
+  const { signIn, cred } = useAuthStore();
   const [formData, setFormData] = useState<RForm>(emptyRegisterFormData);
   const [params] = useSearchParams();
-  const isLogin = params.get("type") === AuthPage.Login;
+  const isRegister = params.get("type") === AuthPage.Register;
 
   const [errors, setErrors] = useState<Record<string, string>>(emptyErrors);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-
+  console.log(cred);
   function handleChange<T extends keyof RForm>(key: T, value: RForm[T]) {
     setFormData((prev) => ({ ...prev, [key]: value }));
   }
@@ -59,29 +66,66 @@ const Auth = () => {
     setErrors((prev) => ({ ...prev, [key]: error }));
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    // if (formData.avatar) {
-    //   let fd = new FormData();
-    //   fd.append("file", formData.avatar);
-    //   fd.append("upload_preset", "upload");
-    //   fd.append("cloud_name", "dtl3zxaep");
-    //   const apiData = {
-    //     data: fd,
-    //   };
-    //   apiCall({
-    //     fn: () => Auth.uploadFile(apiData),
-    //     onSuccess: (res) => {
-    //       console.log(res);
-    //     },
-    //   });
-    // }
     setLoading(true);
-    setTimeout(() => {
+    if (!isRegister) {
+      const apiData = {
+        data: {
+          email: formData.email,
+          password: formData.password,
+        },
+      };
+      apiCall({
+        fn: () => AuthService.login(apiData),
+        onSuccess: (res) => {
+          // const cred = toCred(res?.data?.data);
+          console.log(res);
+          signIn(toCred(res));
+          navigate(`${AllRoutes.PRIVATE.HOME.path}`);
+          toast.success("Login Successful");
+        },
+        onError: (d) => toast.error(d?.message || "Something went wrong"),
+      });
+      return;
+    }
+    try {
+      let avatarUrl = "";
+      if (formData.avatar) {
+        const fd = new FormData();
+        fd.append("file", formData.avatar);
+        fd.append("upload_preset", "upload");
+        fd.append("cloud_name", "dtl3zxaep");
+
+        const resp = await AuthService.uploadFile({ data: fd });
+
+        avatarUrl = resp.data.secure_url || resp.data.url;
+      }
+
+      const registrationData = {
+        data: {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          avatar: avatarUrl,
+        },
+      };
+      await AuthService.register(registrationData);
+      toast.success("Registration successful");
+      params.set("type", AuthPage.Login);
+      navigate(`${AllRoutes.PUBLIC.AUTH.path}?${params.toString()}`);
+    } catch (err: any) {
+      console.warn(err);
+      toast.error(
+        Array.isArray(err?.message)
+          ? Some.Array(err?.message).join(",")
+          : err?.data?.message || "Something went wrong"
+      );
+      console.error(err);
+    } finally {
       setLoading(false);
-    }, 2000);
-    // alert(isLogin ? "Logged in" : "Registered");
-  };
+    }
+  }
 
   return (
     // <WrapperLoader loading={loading}>
@@ -99,12 +143,15 @@ const Auth = () => {
           transition={{ delay: 0.1 }}
           className="text-3xl font-semibold text-center text-gray-700"
         >
-          {isLogin ? "Login" : "Create an Account"}
+          {!isRegister ? "Login" : "Create an Account"}
         </motion.h2>
 
         <AnimatePresence mode="wait">
           {registerDataFields.map((field, i) => {
-            if (isLogin && (field.key === "name" || field.key === "avatar")) {
+            if (
+              !isRegister &&
+              (field.key === "name" || field.key === "avatar")
+            ) {
               return null;
             }
 
@@ -133,7 +180,7 @@ const Auth = () => {
         </AnimatePresence>
 
         <AnimatePresence>
-          {!isLogin && (
+          {isRegister && (
             <motion.div
               key="avatar"
               initial={{ x: 20, opacity: 0 }}
@@ -181,13 +228,15 @@ const Auth = () => {
           className={`w-full py-2 px-4 text-white rounded-xl font-medium shadow-sm transition cursor-pointer`}
           loading={loading}
         >
-          {isLogin ? "Login" : "Register"}
+          {!isRegister ? "Login" : "Register"}
         </Button>
 
         <div className="flex justify-center items-center gap-2 pt-2 text-sm">
           <Text
             children={
-              isLogin ? "Don’t have an account?" : "Already have an account?"
+              !isRegister
+                ? "Don’t have an account?"
+                : "Already have an account?"
             }
             variant="subtle"
           />
@@ -195,13 +244,16 @@ const Auth = () => {
             type="button"
             className="text-blue-600 font-medium underline cursor-pointer"
             onClick={() => {
-              params.set("type", isLogin ? AuthPage.Register : AuthPage.Login);
+              params.set(
+                "type",
+                !isRegister ? AuthPage.Register : AuthPage.Login
+              );
               navigate(`${AllRoutes.PUBLIC.AUTH.path}?${params.toString()}`);
               setFormData(emptyRegisterFormData);
               setErrors(emptyErrors);
             }}
           >
-            {isLogin ? "Register" : "Login"}
+            {!isRegister ? "Register" : "Login"}
           </button>
         </div>
       </motion.form>

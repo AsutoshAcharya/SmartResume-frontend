@@ -1,5 +1,5 @@
 import axios from "axios";
-import api, { Api } from "./api";
+import api, { Api, apiPromise } from "./api";
 let uploadInstance = axios.create({
   baseURL: "https://api.cloudinary.com/v1_1/dtl3zxaep",
   headers: {
@@ -9,11 +9,11 @@ let uploadInstance = axios.create({
 let baseUrl = "/user";
 
 const register = (arg: Api) => {
-  return api.post(`${baseUrl}/register`, arg.data);
+  return apiPromise(() => api.post(`${baseUrl}/register`, arg.data));
 };
 
 const login = (arg: Api) => {
-  return api.post(`${baseUrl}/login`, arg.data);
+  return apiPromise(() => api.post(`${baseUrl}/login`, arg.data));
 };
 
 const uploadFile = (arg: Api) => {
@@ -25,4 +25,6 @@ const uploadFile = (arg: Api) => {
   });
 };
 
-export default { login, register, uploadFile } as const;
+const Auth = { login, register, uploadFile };
+
+export default Auth;
