@@ -6,13 +6,16 @@ let uploadInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+let baseUrl = "/user";
+
 const register = (arg: Api) => {
-  return api.post("/register", arg.data);
+  return api.post(`${baseUrl}/register`, arg.data);
 };
 
 const login = (arg: Api) => {
-  return api.post("/login", arg.data);
+  return api.post(`${baseUrl}/login`, arg.data);
 };
+
 const uploadFile = (arg: Api) => {
   return uploadInstance.post("/image/upload", arg.data, {
     headers: {

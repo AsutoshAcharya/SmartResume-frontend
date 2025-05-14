@@ -1,45 +1,45 @@
-import React from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import { clsx } from "clsx";
+import Loader from "./Loader";
+import WrapperLoader from "./WrapperLoader";
 
-type ButtonProps = {
-  children: React.ReactNode;
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary";
-  className?: string;
-  disabled?: boolean;
-  onClick?: () => void;
-  type?: "button" | "submit" | "reset";
-};
+  loading?: boolean;
+}
 
 const baseClass =
-  "px-4 py-2 rounded text-sm cursor-pointer transition duration-200";
+  "px-4 py-2 rounded text-sm font-medium transition duration-200 inline-flex items-center justify-center";
+
 const variants = {
   primary: "bg-blue-600 text-white hover:bg-blue-700",
   secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
 };
 
 export const Button: React.FC<ButtonProps> = ({
+  type = "button",
   children,
   variant = "primary",
   className,
   disabled = false,
-  onClick,
-  type = "button",
+  loading = false,
+  ...rest
 }) => {
   return (
     <button
       type={type}
-      onClick={onClick}
-      disabled={disabled}
+      disabled={disabled || loading}
       className={clsx(
         baseClass,
         variants[variant],
         {
-          "cursor-not-allowed opacity-50": disabled,
+          "cursor-not-allowed opacity-50": disabled || loading,
         },
         className
       )}
+      {...rest}
     >
-      {children}
+      {loading ? <Loader /> : children}
     </button>
   );
 };

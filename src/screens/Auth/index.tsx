@@ -10,6 +10,8 @@ import { RForm } from "./type";
 import Text from "../../Components/Text";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AllRoutes from "../../AppRoute/AllRoutes";
+import { Button } from "../../Components/Button";
+import WrapperLoader from "../../Components/WrapperLoader";
 enum AuthPage {
   Login = "login",
   Register = "register",
@@ -21,6 +23,8 @@ const Auth = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>(emptyErrors);
   const [preview, setPreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   function handleChange<T extends keyof RForm>(key: T, value: RForm[T]) {
@@ -72,10 +76,15 @@ const Auth = () => {
     //     },
     //   });
     // }
-    alert(isLogin ? "Logged in" : "Registered");
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    // alert(isLogin ? "Logged in" : "Registered");
   };
 
   return (
+    // <WrapperLoader loading={loading}>
     <div className="w-screen h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex justify-center items-center p-4">
       <motion.form
         onSubmit={handleSubmit}
@@ -116,6 +125,7 @@ const Auth = () => {
                   onBlur={() => handleBlur(field.key)}
                   required={field.required}
                   error={errors[field.key]}
+                  disabled={loading}
                 />
               </motion.div>
             );
@@ -165,19 +175,14 @@ const Auth = () => {
           )}
         </AnimatePresence>
 
-        <motion.button
+        <Button
           type="submit"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          disabled={Object.values(errors).some((err) => err)}
-          className={`w-full py-2 px-4 text-white rounded-xl font-medium shadow-sm transition ${
-            Object.values(errors).some((err) => err)
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
+          disabled={Object.values(errors).some((err) => err) || loading}
+          className={`w-full py-2 px-4 text-white rounded-xl font-medium shadow-sm transition cursor-pointer`}
+          loading={loading}
         >
           {isLogin ? "Login" : "Register"}
-        </motion.button>
+        </Button>
 
         <div className="flex justify-center items-center gap-2 pt-2 text-sm">
           <Text
@@ -201,6 +206,7 @@ const Auth = () => {
         </div>
       </motion.form>
     </div>
+    // </WrapperLoader>
   );
 };
 

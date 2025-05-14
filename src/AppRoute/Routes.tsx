@@ -3,6 +3,7 @@ import AllRoutes, { PrivateRouteKeys, PublicRouteKeys } from "./AllRoutes";
 import { AppRoute } from "./type";
 import { Suspense } from "react";
 import Layout from "../Layout";
+import Loader from "../Components/Loader";
 
 const allPublicRoutes = Object.keys(AllRoutes.PUBLIC).map(
   (kee) => AllRoutes.PUBLIC[kee as PublicRouteKeys]
@@ -31,12 +32,13 @@ const AppRoutes = () => {
 export default AppRoutes;
 
 function GetRoute(route: AppRoute) {
+  let Skeleton = route.skeleton || Loader;
   return (
     <Route
       key={route.path + route.title}
       path={route.path}
       element={
-        <Suspense fallback={<>Loader later</>} children={<route.Element />} />
+        <Suspense fallback={<Skeleton />} children={<route.Element />} />
       }
     />
   );
