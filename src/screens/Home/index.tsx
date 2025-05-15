@@ -6,11 +6,13 @@ import { useState } from "react";
 import AddResume from "./AddResume";
 import { Button } from "../../Components/Button";
 import { useAuthStore } from "../../store";
+import ResumeTemplate from "./ResumeTemplate";
+import TextEditor from "./TextEditor";
 
 const Home = () => {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
-  const { cred } = useAuthStore();
+  const { cred, resumeForms } = useAuthStore();
   return (
     <div className="h-full p-4">
       <div className="flex items-center gap-4">
@@ -51,6 +53,7 @@ const Home = () => {
           onDelete={() => {}}
         />
       </div>
+      <TextEditor />
       <AddResume open={open} onClose={() => setOpen(false)} />
     </div>
   );

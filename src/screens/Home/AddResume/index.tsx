@@ -263,7 +263,7 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
           variant="primary"
           onClick={() =>
             step === steps.length - 1
-              ? handleSubmit
+              ? handleSubmit()
               : setStep((prev) => prev + 1)
           }
         >
