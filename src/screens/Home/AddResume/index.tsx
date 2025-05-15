@@ -26,6 +26,7 @@ import ProjectInfo from "./ProjectInfo";
 import EducationInfo from "./EducationInfo";
 import SkillsAndOtherInfo from "./SkillsAndOtherInfo";
 import Modal from "../../../Components/Modal";
+import { useAuthStore } from "../../../store";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -44,6 +45,7 @@ interface Props {
 
 const AddResume = ({ open, onClose, resumeFormData }: Props) => {
   const [step, setStep] = useState(0);
+  const { addResumeToStore } = useAuthStore();
   const [formData, setFormData] = useState<ResumeForm>(
     resumeFormData ?? emptyResumeFormData
   );
@@ -179,6 +181,9 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
       };
     });
   }
+  function handleSubmit() {
+    addResumeToStore(formData);
+  }
 
   if (!open) return <></>;
 
@@ -257,7 +262,9 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
         <Button
           variant="primary"
           onClick={() =>
-            step === steps.length - 1 ? onClose() : setStep((prev) => prev + 1)
+            step === steps.length - 1
+              ? handleSubmit
+              : setStep((prev) => prev + 1)
           }
         >
           {step === steps.length - 1 ? "Submit" : "Next"}

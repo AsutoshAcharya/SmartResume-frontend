@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
 import { Some } from "../helpers/Some";
+import { ResumeForm } from "../screens/Home/type";
 
 export type Cred = {
   userId: string;
@@ -24,6 +25,9 @@ export type StoreState = {
   cred: Cred;
   signIn: (cred: Cred) => void;
   signOut: () => void;
+  resumeForms: Array<ResumeForm>;
+  addResumeToStore: (r: ResumeForm) => void;
+  removeResumeFromStore: (idx: number) => void;
 };
 
 const emptyCred = toCred({});
@@ -38,6 +42,17 @@ const useAuthStore = create<
         cred: emptyCred,
         signIn: (cred) => set({ cred }),
         signOut: () => set({ cred: emptyCred }),
+        resumeForms: [],
+        addResumeToStore: (resume) =>
+          set((state) => ({
+            ...state,
+            resumeForms: state.resumeForms.concat(resume),
+          })),
+        removeResumeFromStore: (idx) =>
+          set((state) => ({
+            ...state,
+            resumeForms: state.resumeForms.filter((_r, index) => index !== idx),
+          })),
       }),
       { name: "smart-resume" }
     ),

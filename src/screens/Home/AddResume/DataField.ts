@@ -108,6 +108,13 @@ export const experienceInfoFields: Array<Field> = [
     required: true,
   },
   {
+    label: "Are You Employed In Current Company?",
+    key: "isCurrentlyEmployed",
+    type: "question",
+    placeholder: "",
+    required: false,
+  },
+  {
     label: "Date of Joining",
     key: "dateOfJoining",
     type: "date",
@@ -118,13 +125,6 @@ export const experienceInfoFields: Array<Field> = [
     label: "Date of Leaving",
     key: "dateOfLeaving",
     type: "date",
-    placeholder: "",
-    required: false,
-  },
-  {
-    label: "Are You Employed In Current Company?",
-    key: "isCurrentlyEmployed",
-    type: "question",
     placeholder: "",
     required: false,
   },

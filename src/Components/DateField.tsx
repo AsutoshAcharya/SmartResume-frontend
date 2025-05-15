@@ -34,7 +34,7 @@ export const DateField: React.FC<DateFieldProps> = ({
           onChange={(date) => onChange(date)}
           disabled={disabled}
           placeholderText={placeholder}
-          className={`w-full grow relative  border rounded border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+          className={`w-full grow relative  border rounded border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer ${
             disabled ? "bg-gray-100 cursor-not-allowed" : "hover:shadow-md"
           }`}
           calendarClassName="border rounded-md shadow-lg"
@@ -44,6 +44,11 @@ export const DateField: React.FC<DateFieldProps> = ({
           dropdownMode="select"
           dateFormat="MMMM dd, yyyy"
           popperProps={{ strategy: "fixed" }}
+          onKeyDown={(e) => {
+            e.preventDefault();
+          }}
+          readOnly={disabled}
+          disabledKeyboardNavigation={true}
         />
         {/* <CalendarIcon
           size={18}

@@ -8,6 +8,7 @@ import { DateField } from "../../../Components/DateField";
 import { Some } from "../../../helpers/Some";
 import Chip from "./components/Chip";
 import { toast } from "react-toastify";
+import Question from "../../../Components/Question";
 
 interface Props {
   experiences: Array<Experience>;
@@ -60,7 +61,7 @@ const ExperienceInfo: FC<Props> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-2">
             {experienceInfoFields
-              .slice(0, 3)
+              .slice(0, 4)
               .map(({ key, label, placeholder, maxLength, type, required }) => (
                 <div key={key} className="w-full">
                   {type === "text" && (
@@ -76,11 +77,21 @@ const ExperienceInfo: FC<Props> = ({
                       required={required}
                     />
                   )}
+                  {type === "question" && (
+                    <Question
+                      label={label}
+                      required={required}
+                      checked={Some.Boolean(data[key as ExperienceInfoKeys])}
+                      onChange={(val) =>
+                        updateExperience(index, key as ExperienceInfoKeys, val)
+                      }
+                    />
+                  )}
                 </div>
               ))}
             <div className="w-full flex flex-row justify-between items-center">
               {experienceInfoFields
-                .slice(3)
+                .slice(4)
                 .map(({ key, label, placeholder, type, required }, idx) => {
                   return (
                     <Fragment key={key}>
