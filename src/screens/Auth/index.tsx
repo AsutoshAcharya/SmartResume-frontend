@@ -80,12 +80,18 @@ const Auth = () => {
         fn: () => AuthService.login(apiData),
         onSuccess: (res) => {
           // const cred = toCred(res?.data?.data);
-          console.log(res);
+          // console.log(res);
           signIn(toCred(res));
           navigate(`${AllRoutes.PRIVATE.HOME.path}`);
           toast.success("Login Successful");
         },
-        onError: (d) => toast.error(d?.message || "Something went wrong"),
+        onError: (d) => {
+          // console.warn(d);
+          toast.error(d?.message || "Something went wrong", {
+            toastId: "error",
+          });
+        },
+        afterCall: () => setLoading(false),
       });
       return;
     }

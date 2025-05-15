@@ -25,6 +25,7 @@ import ExperienceInfo from "./ExperienceInfo";
 import ProjectInfo from "./ProjectInfo";
 import EducationInfo from "./EducationInfo";
 import SkillsAndOtherInfo from "./SkillsAndOtherInfo";
+import Modal from "../../../Components/Modal";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -182,91 +183,87 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
   if (!open) return <></>;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 p-4 overflow-y-auto">
-      <div className="bg-white max-w-4xl w-full rounded-xl shadow-lg p-6 relative">
-        <div className="flex flex-row justify-between items-center">
-          <Text children="Add Resume" weight="bold" size="xl" />
-          <button
-            className="rounded-full hover:bg-blue-200 text-gray-400 transition cursor-pointer"
-            onClick={onClose}
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+    <Modal open={open} onClose={onClose}>
+      <div className="flex flex-row justify-between items-center">
+        <Text children="Add Resume" weight="bold" size="xl" />
+        <button
+          className="rounded-full hover:bg-blue-200 text-gray-400 transition cursor-pointer"
+          onClick={onClose}
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
 
-        <div className="mb-4">
-          <Stepper steps={steps} current={step} />
-          <div className="overflow-y-auto max-h-[60vh]">
-            {step === 0 && (
-              <PersonalInfo
-                data={formData.resume.personalInfo}
-                update={updatePersonalInfo}
-              />
-            )}
-            {step === 1 && (
-              <ExperienceInfo
-                experiences={formData.resume.experience}
-                updateExperience={updateExperience}
-                addExperience={() => handleAddOrRemove("add", "experience")}
-                removeExperience={(idx) => {
-                  handleAddOrRemove("remove", "experience", idx);
-                }}
-              />
-            )}
-            {step === 2 && (
-              <ProjectInfo
-                projects={formData.resume.projects}
-                updateProject={updateproject}
-                addProject={() => handleAddOrRemove("add", "project")}
-                removeProject={(idx) => {
-                  handleAddOrRemove("remove", "project", idx);
-                }}
-              />
-            )}
-            {step === 3 && (
-              <EducationInfo
-                educations={formData.resume.education}
-                updateEducation={updateEducation}
-                addEducation={() => handleAddOrRemove("add", "education")}
-                removeEducation={(idx) => {
-                  handleAddOrRemove("remove", "education", idx);
-                }}
-              />
-            )}
-            {step === 4 && (
-              <SkillsAndOtherInfo
-                others={formData.resume.others}
-                updateOther={updateOther}
-                addOther={() => handleAddOrRemove("add", "others")}
-                removeOther={(idx) => {
-                  handleAddOrRemove("remove", "others", idx);
-                }}
-              />
-            )}
-          </div>
-        </div>
-
-        <div className="flex justify-between mt-6">
-          <Button
-            variant="secondary"
-            onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
-            disabled={step === 0}
-          >
-            Back
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() =>
-              step === steps.length - 1
-                ? onClose()
-                : setStep((prev) => prev + 1)
-            }
-          >
-            {step === steps.length - 1 ? "Submit" : "Next"}
-          </Button>
+      <div className="mb-4">
+        <Stepper steps={steps} current={step} />
+        <div className="overflow-y-auto max-h-[60vh]">
+          {step === 0 && (
+            <PersonalInfo
+              data={formData.resume.personalInfo}
+              update={updatePersonalInfo}
+            />
+          )}
+          {step === 1 && (
+            <ExperienceInfo
+              experiences={formData.resume.experience}
+              updateExperience={updateExperience}
+              addExperience={() => handleAddOrRemove("add", "experience")}
+              removeExperience={(idx) => {
+                handleAddOrRemove("remove", "experience", idx);
+              }}
+            />
+          )}
+          {step === 2 && (
+            <ProjectInfo
+              projects={formData.resume.projects}
+              updateProject={updateproject}
+              addProject={() => handleAddOrRemove("add", "project")}
+              removeProject={(idx) => {
+                handleAddOrRemove("remove", "project", idx);
+              }}
+            />
+          )}
+          {step === 3 && (
+            <EducationInfo
+              educations={formData.resume.education}
+              updateEducation={updateEducation}
+              addEducation={() => handleAddOrRemove("add", "education")}
+              removeEducation={(idx) => {
+                handleAddOrRemove("remove", "education", idx);
+              }}
+            />
+          )}
+          {step === 4 && (
+            <SkillsAndOtherInfo
+              others={formData.resume.others}
+              updateOther={updateOther}
+              addOther={() => handleAddOrRemove("add", "others")}
+              removeOther={(idx) => {
+                handleAddOrRemove("remove", "others", idx);
+              }}
+            />
+          )}
         </div>
       </div>
-    </div>
+
+      <div className="flex justify-between mt-6">
+        <Button
+          variant="secondary"
+          onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
+          disabled={step === 0}
+        >
+          Back
+        </Button>
+        <Button
+          variant="primary"
+          onClick={() =>
+            step === steps.length - 1 ? onClose() : setStep((prev) => prev + 1)
+          }
+        >
+          {step === steps.length - 1 ? "Submit" : "Next"}
+        </Button>
+      </div>
+    </Modal>
   );
 };
 

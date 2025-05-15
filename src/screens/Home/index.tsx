@@ -5,16 +5,18 @@ import SearchFIeld from "../../Components/SearchField";
 import { useState } from "react";
 import AddResume from "./AddResume";
 import { Button } from "../../Components/Button";
+import { useAuthStore } from "../../store";
 
 const Home = () => {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const { cred } = useAuthStore();
   return (
     <div className="h-full p-4">
       <div className="flex items-center gap-4">
         <div className="flex flex-row items-center gap-4">
           <Text
-            children="Hello,John"
+            children={`Hello ${cred.name}`}
             weight="bold"
             size="xl"
             className="text-gray-600"
@@ -27,8 +29,16 @@ const Home = () => {
             + Add Resume
           </Button>
         </div>
-        <div className="flex w-7 h-7 justify-center items-center gap-4 bg-blue-300 rounded-full">
-          <User className="text-blue-600" />
+        <div className="flex w-13 h-13 justify-center items-center gap-4 bg-blue-300 rounded-full overflow-clip">
+          {cred?.avatar ? (
+            <img
+              src={`${cred?.avatar}`}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <User className="text-blue-600" />
+          )}
         </div>
       </div>
       <div className="p-4 grid grid-cols-2 place-content-center gap-4">

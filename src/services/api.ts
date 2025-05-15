@@ -28,7 +28,16 @@ export function apiPromise(request: () => Promise<AxiosResponse>) {
   return new Promise<Record<string, any>>((resolve, reject) =>
     request()
       .then((response) => resolve(response.data))
-      .catch((error) => defaultCatch(error, reject))
+      .catch((error) => {
+        console.log(error);
+        if (error.response) {
+          reject(error.response);
+        } else if (error.request) {
+          reject(genericError);
+        } else {
+          reject(genericError);
+        }
+      })
   );
 }
 
