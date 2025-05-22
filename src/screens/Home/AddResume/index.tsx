@@ -51,7 +51,7 @@ interface Props {
 
 const AddResume = ({ open, onClose, resumeFormData }: Props) => {
   const [step, setStep] = useState(0);
-  const { cred, addResumeToStore } = useAuthStore();
+  const { cred, addResumeToStore, resumeForms } = useAuthStore();
   const [formData, setFormData] = useState<ResumeForm>(
     resumeFormData ?? emptyResumeFormData
   );
@@ -124,156 +124,13 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
     const payload = {
       ...cred,
       data: {
-        title: formData.title,
-        resume: formData.resume,
+        title: "resume",
+        resume: resumeForms[0],
       },
     };
 
     // return console.log(formData);
-    addResumeToStore({
-      id: "",
-      title: "",
-      resume: {
-        personalInfo: {
-          name: "Asutosh Acharya",
-          address: "Bhubaneswar",
-          phone: "8249079326",
-          email: "asutosha109@gmail.com",
-          links: [
-            "https://www.linkedin.com/in/asutosh-acharya-40b591228",
-            "https://github.com/AsutoshAcharya",
-          ],
-        },
-        experience: [
-          {
-            companyName: "SoftSensor.Ai Pvt. Ltd.",
-            companyLocation: "Jaipur,India",
-            role: "Software Engineer",
-            dateOfJoining: "2022-12-14T18:30:00.000Z",
-            dateOfLeaving: "",
-            isCurrentlyEmployed: true,
-            descriptions: [
-              "Developed a bulk resume upload feature with drag-and-drop and multi-file selection capabilities, enhancing recruiter productivity and streamlining resume processing workflows.",
-              "Designed and integrated a responsive Resume Parsing Interface that dynamically parses resumes via backend APIs, displaying structured data in an intuitive, user-friendly layout.",
-              "Built reusable React components using clean, maintainable code with a strong emphasis on component modularity, state management, and seamless REST API integration.",
-              "Engineered a Shift Scheduling Module supporting daily, weekly, and biweekly views, enabling operations teams to create, edit, and assign shifts efficiently, improving workforce planning and scheduling.",
-              "Created an Employee View Interface with calendar-based layouts, dynamically rendering personalized shift data, enhancing employee transparency and schedule visibility.",
-              "Implemented a Leave Management System supporting leave requests, manager approval workflows, and automated schedule conflict resolution, increasing operational efficiency and reducing errors.",
-              "Developed an in-app real-time chat frontend using WebSockets for instant communication between drivers and managers, including group chat functionality for improved logistics coordination.",
-              "Utilized SonarQube to continuously analyze code quality, detect bugs, security vulnerabilities, and maintain compliance with coding standards and best practices.",
-            ],
-          },
-        ],
-        projects: [
-          {
-            title: " Share Exp",
-            repoLink: "https://github.com/AsutoshAcharya/ShareExp",
-            projectLink: "",
-            startDate: "",
-            endDate: "",
-            descriptions: [
-              "A platform for users to share, comment, and like interview experiences, fostering a job-seeking community.",
-            ],
-            techStack: [
-              "React.js",
-              "Node.js",
-              "Express.js",
-              "MongoDB",
-              "Tailwind CSS",
-            ],
-          },
-          {
-            title: "Smart Resume",
-            repoLink: "https://github.com/AsutoshAcharya/SmartResume-frontend",
-            projectLink: "",
-            startDate: "",
-            endDate: "",
-            descriptions: [
-              "Built a smart resume web app that allows users to create, update, and manage their resume information effortlessly. Users can choose from multiple professional templates and download their resume as a PDF at any time.",
-            ],
-            techStack: [
-              "React.js",
-              "Typescript",
-              "Nest.js",
-              "MongoDB",
-              "Tailwind CSS",
-            ],
-          },
-        ],
-        education: [
-          {
-            course: "Master's in Computer Application",
-            college:
-              "Orissa University of Agriculture and Technology,Bhubaneswar",
-            totalMarks: "",
-            markSecured: "",
-            startDate: "",
-            endDate: "2022-12-13T18:30:00.000Z",
-          },
-          {
-            course: "Bachelor of Science",
-            college: "Rajdhani Degree College",
-            totalMarks: "",
-            markSecured: "",
-            startDate: "",
-            endDate: "2019-05-06T18:30:00.000Z",
-          },
-        ],
-        others: [
-          {
-            title: "Languages",
-            info: ["English", "Hindi", "Odia"],
-          },
-          {
-            title: "Certifications",
-            info: [
-              "React Full Course UDEMY",
-              "Responsive Web Design by FreeCodeCamp",
-            ],
-          },
-          {
-            title: "Hackathon",
-            info: [
-              "Won a consolation prize at Showwcase Hackathon for developing ”Showwcase Plus,” an application  extending Showwcase’s functionality",
-            ],
-          },
-        ],
-        skills: [
-          {
-            title: "Languages",
-            info: ["JavaScript", "TypeScript"],
-          },
-          {
-            title: "Frameworks",
-            info: ["Node.js", "Express.js", "Nest.js"],
-          },
-          {
-            title: "Libraries",
-            info: [
-              "React.js",
-              "React Query",
-              "Material UI",
-              "Tailwind CSS",
-              "Redux",
-              "Zustand",
-            ],
-          },
-          {
-            title: "Tools",
-            info: ["Git", "GitHub", "Jira", "SonarQube"],
-          },
-          {
-            title: "Web",
-            info: ["HTML", "CSS3"],
-          },
-          {
-            title: "Database",
-            info: ["MongoDB"],
-          },
-        ],
-      },
-    });
-    return;
+    // addResumeToStore(resumeForms[0]);
     apiCall({
       fn: () => Resume.addResume(payload),
       onSuccess: () => toast.success("Resume has been added"),
