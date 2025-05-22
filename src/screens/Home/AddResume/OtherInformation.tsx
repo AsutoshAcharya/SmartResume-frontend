@@ -19,7 +19,7 @@ interface Props {
   removeOther: (idx: number) => void;
 }
 
-const SkillsAndOtherInfo: FC<Props> = ({
+const OtherInformation: FC<Props> = ({
   others,
   updateOther,
   addOther,
@@ -109,4 +109,4 @@ const SkillsAndOtherInfo: FC<Props> = ({
   );
 };
 
-export default SkillsAndOtherInfo;
+export default OtherInformation;

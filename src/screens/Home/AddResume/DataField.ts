@@ -22,6 +22,7 @@ export const emptyResumeFormData: ResumeForm = {
     projects: [],
     education: [],
     others: [],
+    skills: [],
   },
 };
 export const emptyExperience: Experience = {
@@ -217,7 +218,18 @@ export const otherFields: Array<Field> = [
   {
     label: "Other Info",
     key: "title",
-    placeholder: "Enter title of other info. e.g. Skills or Language etc.",
+    placeholder:
+      "Enter title of other info. e.g. Languages or Certificatiions etc",
+    type: "text",
+    maxLength: 15,
+  },
+];
+
+export const skillFields: Array<Field> = [
+  {
+    label: "Skill Info",
+    key: "title",
+    placeholder: "Enter title of skill info. e.g. Languange,Tools,Web,Database",
     type: "text",
     maxLength: 15,
   },

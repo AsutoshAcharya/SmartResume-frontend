@@ -28,6 +28,7 @@ const ResumeTemplate: React.FC<ResumeTemplateProps> = ({ data }) => {
         backgroundColor: "#FFF",
       }}
     >
+      {/* Header */}
       <h1 style={{ fontSize: "2rem", textAlign: "center", marginBottom: 5 }}>
         {personalInfo.name}
       </h1>
@@ -52,9 +53,14 @@ const ResumeTemplate: React.FC<ResumeTemplateProps> = ({ data }) => {
         )}
       </div>
 
-      {/* <hr style={{ margin: "20px 0" }} /> */}
-
-      <h6 style={{ fontWeight: "bold", borderBottom: "1px solid #ccc" }}>
+      {/* Experience */}
+      <h6
+        style={{
+          fontWeight: "bold",
+          borderBottom: "1px solid #ccc",
+          marginTop: 20,
+        }}
+      >
         Experience
       </h6>
       {experience.map((exp, idx) => (
@@ -71,7 +77,9 @@ const ResumeTemplate: React.FC<ResumeTemplateProps> = ({ data }) => {
             </span>
           </div>
           <em>{exp.role}</em>
-          <ul style={{ marginTop: 5 }}>
+          <ul
+            style={{ marginTop: 5, paddingLeft: "20px", listStyleType: "disc" }}
+          >
             {exp.descriptions.map((desc, i) => (
               <li key={i}>{desc}</li>
             ))}
@@ -79,51 +87,79 @@ const ResumeTemplate: React.FC<ResumeTemplateProps> = ({ data }) => {
         </div>
       ))}
 
-      <h6 style={{ borderBottom: "1px solid #ccc", fontWeight: "bold" }}>
+      {/* Projects */}
+      <h6
+        style={{
+          borderBottom: "1px solid #ccc",
+          fontWeight: "bold",
+          marginTop: 20,
+        }}
+      >
         Projects
       </h6>
       {projects.map((proj, idx) => (
         <div key={idx} style={{ marginBottom: "20px" }}>
-          <h4 style={{ fontWeight: "bold" }}>{proj.title}</h4>
-          <span style={{ float: "right" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <h4 style={{ fontWeight: "bold" }}>{proj.title}</h4>
             <a href={proj.repoLink} target="_blank" rel="noopener noreferrer">
               GitHub Repo
             </a>
-          </span>
-          <ul>
+          </div>
+          <ul style={{ paddingLeft: "20px", listStyleType: "disc" }}>
             {proj.descriptions.map((desc, i) => (
               <li key={i}>{desc}</li>
             ))}
           </ul>
-          <em>Technologies:</em> {proj.techStack.join(", ")}
+          <em>Technologies:</em> {<em>{proj.techStack.join(", ")}</em>}
         </div>
       ))}
 
-      {others.map((section, idx) => (
-        <>
-          <h6 key={idx} style={{ borderBottom: "1px solid #ccc" }}>
-            {section.title}
-          </h6>
-          <ul>
-            {section.info.map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
-          </ul>
-        </>
-      ))}
+      {/* Skills */}
+      <h6
+        style={{
+          borderBottom: "1px solid #ccc",
+          fontWeight: "bold",
+          marginTop: 20,
+        }}
+      >
+        Skills
+      </h6>
+      <ul style={{ paddingLeft: "20px", listStyleType: "disc" }}>
+        {others.map((section, idx) => (
+          <li
+            key={idx}
+            style={{
+              marginBottom: "5px",
+              listStyleType: "disc",
+              display: "list-item",
+            }}
+          >
+            <strong>{section.title}:</strong> {section.info.join(", ")}
+          </li>
+        ))}
+      </ul>
 
-      <h6 style={{ borderBottom: "1px solid #ccc", fontWeight: "bold" }}>
+      {/* Education */}
+      <h6
+        style={{
+          borderBottom: "1px solid #ccc",
+          fontWeight: "bold",
+          marginTop: 20,
+        }}
+      >
         Education
       </h6>
-      {education.map((edu, idx) => (
-        <div key={idx} style={{ marginBottom: "20px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <h4 style={{ fontWeight: "bold" }}>{edu.course}</h4>
-            <span>{formatDate(edu.endDate)}</span>
-          </div>
-          <em>{edu.college}</em>
-        </div>
-      ))}
+      <ul style={{ paddingLeft: "20px", listStyleType: "disc" }}>
+        {education.map((edu, idx) => (
+          <li key={idx} style={{ marginBottom: "10px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <h4 style={{ fontWeight: "bold", margin: 0 }}>{edu.course}</h4>
+              <span>{formatDate(edu.endDate)}</span>
+            </div>
+            <em>{edu.college}</em>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

@@ -70,7 +70,8 @@ export type Resume = {
   experience: Array<Experience>;
   projects: Array<Project>;
   education: Array<Education>;
-  others: Array<OtherInfo>; //incudes skill field also
+  others: Array<OtherInfo>;
+  skills: Array<OtherInfo>;
 };
 export type ResumeForm = {
   id: string;

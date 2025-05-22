@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { User, Briefcase, BookOpen, Code2, Layers3, X } from "lucide-react";
+import {
+  User,
+  Briefcase,
+  BookOpen,
+  Code2,
+  Layers3,
+  X,
+  DiamondPlus,
+} from "lucide-react";
 import {
   Education,
   EducationKeys,
@@ -24,16 +32,18 @@ import {
 import ExperienceInfo from "./ExperienceInfo";
 import ProjectInfo from "./ProjectInfo";
 import EducationInfo from "./EducationInfo";
-import SkillsAndOtherInfo from "./SkillsAndOtherInfo";
 import Modal from "../../../Components/Modal";
 import { useAuthStore } from "../../../store";
+import OtherInformation from "./OtherInformation";
+import SkillInfo from "./SkillInfo";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
   { name: "Experience", Icon: Briefcase },
   { name: "Projects", Icon: Code2 },
   { name: "Education", Icon: BookOpen },
-  { name: "Skills & Others", Icon: Layers3 },
+  { name: "Skills", Icon: DiamondPlus },
+  { name: "Others", Icon: Layers3 },
   // { name: "Review", Icon: FileText },
 ];
 
@@ -134,9 +144,26 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
     }));
   }
 
+  function updateSkills<T extends keyof OtherInfo>(
+    index: number,
+    key: T,
+    value: OtherInfo[T]
+  ) {
+    setFormData((prev) => ({
+      ...prev,
+      resume: {
+        ...prev.resume,
+        skills: prev.resume.skills.map((skill, i) => {
+          if (i !== index) return skill;
+          return { ...skill, [key]: value };
+        }),
+      },
+    }));
+  }
+
   function handleAddOrRemove(
     type: "add" | "remove",
-    update: "experience" | "project" | "education" | "others",
+    update: "experience" | "project" | "education" | "others" | "skills",
     index?: number
   ) {
     setFormData((prev) => {
@@ -169,6 +196,12 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
             type === "add"
               ? newResume.others.concat(emptyOther)
               : newResume.others.filter((_r, idx) => idx !== index);
+          break;
+        case "skills":
+          newResume.skills =
+            type === "add"
+              ? newResume.skills.concat(emptyOther) //same empt
+              : newResume.skills.filter((_r, idx) => idx !== index);
           break;
 
         default:
@@ -239,7 +272,17 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
             />
           )}
           {step === 4 && (
-            <SkillsAndOtherInfo
+            <SkillInfo
+              skills={formData.resume.skills}
+              updateSkills={updateSkills}
+              addSkill={() => handleAddOrRemove("add", "skills")}
+              removeSkill={(idx) => {
+                handleAddOrRemove("remove", "skills", idx);
+              }}
+            />
+          )}
+          {step === 5 && (
+            <OtherInformation
               others={formData.resume.others}
               updateOther={updateOther}
               addOther={() => handleAddOrRemove("add", "others")}

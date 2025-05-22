@@ -6,7 +6,6 @@ import { useState } from "react";
 import AddResume from "./AddResume";
 import { Button } from "../../Components/Button";
 import { useAuthStore } from "../../store";
-import ResumeTemplate from "./ResumeTemplate";
 import TextEditor from "./TextEditor";
 
 const Home = () => {
