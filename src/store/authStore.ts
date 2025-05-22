@@ -41,7 +41,7 @@ const useAuthStore = create<
       (set) => ({
         cred: emptyCred,
         signIn: (cred) => set({ cred }),
-        signOut: () => set({ cred: emptyCred }),
+        signOut: () => set({ cred: emptyCred, resumeForms: [] }),
         resumeForms: [],
         addResumeToStore: (resume) =>
           set((state) => ({

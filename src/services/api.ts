@@ -44,8 +44,8 @@ export function apiPromise(request: () => Promise<AxiosResponse>) {
 export function setHeaders(token: string, userId: string) {
   return {
     headers: {
-      "access-token": token,
-      "access-user": userId,
+      token: token,
+      id: userId,
     },
   };
 }

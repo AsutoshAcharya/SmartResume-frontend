@@ -7,6 +7,8 @@ import AddResume from "./AddResume";
 import { Button } from "../../Components/Button";
 import { useAuthStore } from "../../store";
 import TextEditor from "./TextEditor";
+import ExportToPdf from "./ExportToPdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -54,6 +56,13 @@ const Home = () => {
       </div>
       <TextEditor />
       <AddResume open={open} onClose={() => setOpen(false)} />
+
+      <PDFDownloadLink
+        document={<ExportToPdf data={resumeForms[0]} />}
+        fileName="resume.pdf"
+      >
+        {({ loading }) => (loading ? "Loading..." : "Download Resume")}
+      </PDFDownloadLink>
     </div>
   );
 };

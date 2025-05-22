@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.3.0",
     "@tailwindcss/vite": "^4.1.5",
     "@tanstack/react-query": "^4.20.4",
     "@types/react-toastify": "^4.0.2",

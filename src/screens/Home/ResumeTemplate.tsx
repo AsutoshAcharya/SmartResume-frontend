@@ -19,11 +19,12 @@ const ResumeTemplate: React.FC<ResumeTemplateProps> = ({ data }) => {
   return (
     <div
       style={{
-        fontFamily: "Times New Roman",
+        fontFamily: "Arial",
         color: "#111",
         lineHeight: 1.5,
         padding: "40px",
-        maxWidth: 900,
+        height: "1123px",
+        width: "794px",
         margin: "auto",
         backgroundColor: "#FFF",
       }}

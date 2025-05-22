@@ -8,20 +8,9 @@ import {
   X,
   DiamondPlus,
 } from "lucide-react";
-import {
-  Education,
-  EducationKeys,
-  Experience,
-  OtherInfo,
-  PersonalInfo as PersonalInfoType,
-  Project,
-  ResumeForm,
-  Step,
-} from "../type";
-import PersonalInfo from "./PersonalInfo";
-import Stepper from "./Stepper";
-import Text from "../../../Components/Text";
-import { Button } from "../../../Components/Button";
+
+import { PersonalInfo as PersonalInfoType, ResumeForm, Step } from "../type";
+
 import {
   emptyEducation,
   emptyExperience,
@@ -29,13 +18,21 @@ import {
   emptyProject,
   emptyResumeFormData,
 } from "./DataField";
+
+import PersonalInfo from "./PersonalInfo";
 import ExperienceInfo from "./ExperienceInfo";
 import ProjectInfo from "./ProjectInfo";
 import EducationInfo from "./EducationInfo";
-import Modal from "../../../Components/Modal";
-import { useAuthStore } from "../../../store";
-import OtherInformation from "./OtherInformation";
 import SkillInfo from "./SkillInfo";
+import OtherInformation from "./OtherInformation";
+import Stepper from "./Stepper";
+import Text from "../../../Components/Text";
+import Modal from "../../../Components/Modal";
+import { Button } from "../../../Components/Button";
+import { useAuthStore } from "../../../store";
+import apiCall from "../../../helpers/apiCall";
+import Resume from "../../../services/Resume";
+import { toast } from "react-toastify";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -44,7 +41,6 @@ export const steps: Array<Step> = [
   { name: "Education", Icon: BookOpen },
   { name: "Skills", Icon: DiamondPlus },
   { name: "Others", Icon: Layers3 },
-  // { name: "Review", Icon: FileText },
 ];
 
 interface Props {
@@ -55,11 +51,28 @@ interface Props {
 
 const AddResume = ({ open, onClose, resumeFormData }: Props) => {
   const [step, setStep] = useState(0);
-  const { addResumeToStore } = useAuthStore();
+  const { cred, addResumeToStore } = useAuthStore();
   const [formData, setFormData] = useState<ResumeForm>(
     resumeFormData ?? emptyResumeFormData
   );
-  console.warn(formData);
+
+  const updateSection = <T,>(
+    section: keyof ResumeForm["resume"],
+    index: number,
+    key: string,
+    value: T
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      resume: {
+        ...prev.resume,
+        [section]: (prev.resume[section] as any).map((item: any, i: number) =>
+          i === index ? { ...item, [key]: value } : item
+        ),
+      },
+    }));
+  };
+
   const updatePersonalInfo = (
     field: keyof PersonalInfoType,
     value: string | string[]
@@ -76,154 +89,278 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
     }));
   };
 
-  function updateExperience<T extends keyof Experience>(
-    index: number,
-    key: T,
-    value: Experience[T]
-  ) {
-    setFormData((prev) => ({
-      ...prev,
-      resume: {
-        ...prev.resume,
-        experience: prev.resume.experience.map((exp, i) => {
-          if (i !== index) return exp;
-          return { ...exp, [key]: value };
-        }),
-      },
-    }));
-  }
-
-  function updateproject<T extends keyof Project>(
-    index: number,
-    key: T,
-    value: Project[T]
-  ) {
-    setFormData((prev) => ({
-      ...prev,
-      resume: {
-        ...prev.resume,
-        projects: prev.resume.projects.map((proj, i) => {
-          if (i !== index) return proj;
-          return { ...proj, [key]: value };
-        }),
-      },
-    }));
-  }
-
-  function updateEducation<T extends EducationKeys>(
-    index: number,
-    key: T,
-    value: Education[T]
-  ) {
-    setFormData((prev) => ({
-      ...prev,
-      resume: {
-        ...prev.resume,
-        education: prev.resume.education.map((ed, i) => {
-          if (i !== index) return ed;
-          return { ...ed, [key]: value };
-        }),
-      },
-    }));
-  }
-
-  function updateOther<T extends keyof OtherInfo>(
-    index: number,
-    key: T,
-    value: OtherInfo[T]
-  ) {
-    setFormData((prev) => ({
-      ...prev,
-      resume: {
-        ...prev.resume,
-        others: prev.resume.others.map((other, i) => {
-          if (i !== index) return other;
-          return { ...other, [key]: value };
-        }),
-      },
-    }));
-  }
-
-  function updateSkills<T extends keyof OtherInfo>(
-    index: number,
-    key: T,
-    value: OtherInfo[T]
-  ) {
-    setFormData((prev) => ({
-      ...prev,
-      resume: {
-        ...prev.resume,
-        skills: prev.resume.skills.map((skill, i) => {
-          if (i !== index) return skill;
-          return { ...skill, [key]: value };
-        }),
-      },
-    }));
-  }
-
-  function handleAddOrRemove(
+  const handleAddOrRemove = (
     type: "add" | "remove",
-    update: "experience" | "project" | "education" | "others" | "skills",
+    section: keyof ResumeForm["resume"],
     index?: number
-  ) {
+  ) => {
     setFormData((prev) => {
-      const newResume = { ...prev.resume };
+      const dataMap: Record<any, any> = {
+        experience: emptyExperience,
+        projects: emptyProject,
+        education: emptyEducation,
+        others: emptyOther,
+        skills: emptyOther,
+      };
 
-      switch (update) {
-        case "experience":
-          newResume.experience =
-            type === "add"
-              ? newResume.experience.concat(emptyExperience)
-              : newResume.experience.filter((_r, idx) => idx !== index);
-          break;
+      const currentArray = prev.resume[section] as any[];
 
-        case "project":
-          newResume.projects =
-            type === "add"
-              ? newResume.projects.concat(emptyProject)
-              : newResume.projects.filter((_r, idx) => idx !== index);
-          break;
-
-        case "education":
-          newResume.education =
-            type === "add"
-              ? newResume.education.concat(emptyEducation)
-              : newResume.education.filter((_r, idx) => idx !== index);
-          break;
-
-        case "others":
-          newResume.others =
-            type === "add"
-              ? newResume.others.concat(emptyOther)
-              : newResume.others.filter((_r, idx) => idx !== index);
-          break;
-        case "skills":
-          newResume.skills =
-            type === "add"
-              ? newResume.skills.concat(emptyOther) //same empt
-              : newResume.skills.filter((_r, idx) => idx !== index);
-          break;
-
-        default:
-          break;
-      }
+      const updatedArray =
+        type === "add"
+          ? currentArray.concat(dataMap[section])
+          : currentArray.filter((_, idx) => idx !== index);
 
       return {
         ...prev,
-        resume: newResume,
+        resume: {
+          ...prev.resume,
+          [section]: updatedArray,
+        },
       };
     });
-  }
-  function handleSubmit() {
-    addResumeToStore(formData);
-  }
+  };
 
-  if (!open) return <></>;
+  const handleSubmit = () => {
+    const payload = {
+      ...cred,
+      data: {
+        title: formData.title,
+        resume: formData.resume,
+      },
+    };
+
+    // return console.log(formData);
+    addResumeToStore({
+      id: "",
+      title: "",
+      resume: {
+        personalInfo: {
+          name: "Asutosh Acharya",
+          address: "Bhubaneswar",
+          phone: "8249079326",
+          email: "asutosha109@gmail.com",
+          links: [
+            "https://www.linkedin.com/in/asutosh-acharya-40b591228",
+            "https://github.com/AsutoshAcharya",
+          ],
+        },
+        experience: [
+          {
+            companyName: "SoftSensor.Ai Pvt. Ltd.",
+            companyLocation: "Jaipur,India",
+            role: "Software Engineer",
+            dateOfJoining: "2022-12-14T18:30:00.000Z",
+            dateOfLeaving: "",
+            isCurrentlyEmployed: true,
+            descriptions: [
+              "Developed a bulk resume upload feature with drag-and-drop and multi-file selection capabilities, enhancing recruiter productivity and streamlining resume processing workflows.",
+              "Designed and integrated a responsive Resume Parsing Interface that dynamically parses resumes via backend APIs, displaying structured data in an intuitive, user-friendly layout.",
+              "Built reusable React components using clean, maintainable code with a strong emphasis on component modularity, state management, and seamless REST API integration.",
+              "Engineered a Shift Scheduling Module supporting daily, weekly, and biweekly views, enabling operations teams to create, edit, and assign shifts efficiently, improving workforce planning and scheduling.",
+              "Created an Employee View Interface with calendar-based layouts, dynamically rendering personalized shift data, enhancing employee transparency and schedule visibility.",
+              "Implemented a Leave Management System supporting leave requests, manager approval workflows, and automated schedule conflict resolution, increasing operational efficiency and reducing errors.",
+              "Developed an in-app real-time chat frontend using WebSockets for instant communication between drivers and managers, including group chat functionality for improved logistics coordination.",
+              "Utilized SonarQube to continuously analyze code quality, detect bugs, security vulnerabilities, and maintain compliance with coding standards and best practices.",
+            ],
+          },
+        ],
+        projects: [
+          {
+            title: " Share Exp",
+            repoLink: "https://github.com/AsutoshAcharya/ShareExp",
+            projectLink: "",
+            startDate: "",
+            endDate: "",
+            descriptions: [
+              "A platform for users to share, comment, and like interview experiences, fostering a job-seeking community.",
+            ],
+            techStack: [
+              "React.js",
+              "Node.js",
+              "Express.js",
+              "MongoDB",
+              "Tailwind CSS",
+            ],
+          },
+          {
+            title: "Smart Resume",
+            repoLink: "https://github.com/AsutoshAcharya/SmartResume-frontend",
+            projectLink: "",
+            startDate: "",
+            endDate: "",
+            descriptions: [
+              "Built a smart resume web app that allows users to create, update, and manage their resume information effortlessly. Users can choose from multiple professional templates and download their resume as a PDF at any time.",
+            ],
+            techStack: [
+              "React.js",
+              "Typescript",
+              "Nest.js",
+              "MongoDB",
+              "Tailwind CSS",
+            ],
+          },
+        ],
+        education: [
+          {
+            course: "Master's in Computer Application",
+            college:
+              "Orissa University of Agriculture and Technology,Bhubaneswar",
+            totalMarks: "",
+            markSecured: "",
+            startDate: "",
+            endDate: "2022-12-13T18:30:00.000Z",
+          },
+          {
+            course: "Bachelor of Science",
+            college: "Rajdhani Degree College",
+            totalMarks: "",
+            markSecured: "",
+            startDate: "",
+            endDate: "2019-05-06T18:30:00.000Z",
+          },
+        ],
+        others: [
+          {
+            title: "Languages",
+            info: ["English", "Hindi", "Odia"],
+          },
+          {
+            title: "Certifications",
+            info: [
+              "React Full Course UDEMY",
+              "Responsive Web Design by FreeCodeCamp",
+            ],
+          },
+          {
+            title: "Hackathon",
+            info: [
+              "Won a consolation prize at Showwcase Hackathon for developing ”Showwcase Plus,” an application  extending Showwcase’s functionality",
+            ],
+          },
+        ],
+        skills: [
+          {
+            title: "Languages",
+            info: ["JavaScript", "TypeScript"],
+          },
+          {
+            title: "Frameworks",
+            info: ["Node.js", "Express.js", "Nest.js"],
+          },
+          {
+            title: "Libraries",
+            info: [
+              "React.js",
+              "React Query",
+              "Material UI",
+              "Tailwind CSS",
+              "Redux",
+              "Zustand",
+            ],
+          },
+          {
+            title: "Tools",
+            info: ["Git", "GitHub", "Jira", "SonarQube"],
+          },
+          {
+            title: "Web",
+            info: ["HTML", "CSS3"],
+          },
+          {
+            title: "Database",
+            info: ["MongoDB"],
+          },
+        ],
+      },
+    });
+    return;
+    apiCall({
+      fn: () => Resume.addResume(payload),
+      onSuccess: () => toast.success("Resume has been added"),
+      onError: (err) => toast.error(err?.message || "Something went wrong"),
+      // afterCall: () => {
+      //   setFormData(emptyResumeFormData);
+      //   setStep(0);
+      //   onClose();
+      // },
+    });
+  };
+
+  if (!open) return null;
+
+  const renderStepContent = () => {
+    switch (step) {
+      case 0:
+        return (
+          <PersonalInfo
+            data={formData.resume.personalInfo}
+            update={updatePersonalInfo}
+          />
+        );
+      case 1:
+        return (
+          <ExperienceInfo
+            experiences={formData.resume.experience}
+            updateExperience={(i, key, val) =>
+              updateSection("experience", i, key, val)
+            }
+            addExperience={() => handleAddOrRemove("add", "experience")}
+            removeExperience={(i) =>
+              handleAddOrRemove("remove", "experience", i)
+            }
+          />
+        );
+      case 2:
+        return (
+          <ProjectInfo
+            projects={formData.resume.projects}
+            updateProject={(i, key, val) =>
+              updateSection("projects", i, key, val)
+            }
+            addProject={() => handleAddOrRemove("add", "projects")}
+            removeProject={(i) => handleAddOrRemove("remove", "projects", i)}
+          />
+        );
+      case 3:
+        return (
+          <EducationInfo
+            educations={formData.resume.education}
+            updateEducation={(i, key, val) =>
+              updateSection("education", i, key, val)
+            }
+            addEducation={() => handleAddOrRemove("add", "education")}
+            removeEducation={(i) => handleAddOrRemove("remove", "education", i)}
+          />
+        );
+      case 4:
+        return (
+          <SkillInfo
+            skills={formData.resume.skills}
+            updateSkills={(i, key, val) => updateSection("skills", i, key, val)}
+            addSkill={() => handleAddOrRemove("add", "skills")}
+            removeSkill={(i) => handleAddOrRemove("remove", "skills", i)}
+          />
+        );
+      case 5:
+        return (
+          <OtherInformation
+            others={formData.resume.others}
+            updateOther={(i, key, val) => updateSection("others", i, key, val)}
+            addOther={() => handleAddOrRemove("add", "others")}
+            removeOther={(i) => handleAddOrRemove("remove", "others", i)}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <Modal open={open} onClose={onClose}>
-      <div className="flex flex-row justify-between items-center">
-        <Text children="Add Resume" weight="bold" size="xl" />
+      <div className="flex flex-row justify-between items-center mb-4">
+        <Text weight="bold" size="xl">
+          Add Resume
+        </Text>
         <button
           className="rounded-full hover:bg-blue-200 text-gray-400 transition cursor-pointer"
           onClick={onClose}
@@ -232,67 +369,8 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
         </button>
       </div>
 
-      <div className="mb-4">
-        <Stepper steps={steps} current={step} />
-        <div className="overflow-y-auto max-h-[60vh]">
-          {step === 0 && (
-            <PersonalInfo
-              data={formData.resume.personalInfo}
-              update={updatePersonalInfo}
-            />
-          )}
-          {step === 1 && (
-            <ExperienceInfo
-              experiences={formData.resume.experience}
-              updateExperience={updateExperience}
-              addExperience={() => handleAddOrRemove("add", "experience")}
-              removeExperience={(idx) => {
-                handleAddOrRemove("remove", "experience", idx);
-              }}
-            />
-          )}
-          {step === 2 && (
-            <ProjectInfo
-              projects={formData.resume.projects}
-              updateProject={updateproject}
-              addProject={() => handleAddOrRemove("add", "project")}
-              removeProject={(idx) => {
-                handleAddOrRemove("remove", "project", idx);
-              }}
-            />
-          )}
-          {step === 3 && (
-            <EducationInfo
-              educations={formData.resume.education}
-              updateEducation={updateEducation}
-              addEducation={() => handleAddOrRemove("add", "education")}
-              removeEducation={(idx) => {
-                handleAddOrRemove("remove", "education", idx);
-              }}
-            />
-          )}
-          {step === 4 && (
-            <SkillInfo
-              skills={formData.resume.skills}
-              updateSkills={updateSkills}
-              addSkill={() => handleAddOrRemove("add", "skills")}
-              removeSkill={(idx) => {
-                handleAddOrRemove("remove", "skills", idx);
-              }}
-            />
-          )}
-          {step === 5 && (
-            <OtherInformation
-              others={formData.resume.others}
-              updateOther={updateOther}
-              addOther={() => handleAddOrRemove("add", "others")}
-              removeOther={(idx) => {
-                handleAddOrRemove("remove", "others", idx);
-              }}
-            />
-          )}
-        </div>
-      </div>
+      <Stepper steps={steps} current={step} />
+      <div className="overflow-y-auto max-h-[60vh]">{renderStepContent()}</div>
 
       <div className="flex justify-between mt-6">
         <Button
