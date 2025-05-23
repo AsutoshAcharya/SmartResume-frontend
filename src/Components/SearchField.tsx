@@ -1,19 +1,30 @@
-import React, { FC } from "react";
+import React, { FC, HTMLAttributes } from "react";
 import { Search } from "lucide-react";
+import clsx from "clsx";
 
-interface Props {
+interface Props
+  extends Omit<HTMLAttributes<HTMLDivElement>, "onChange" | "className"> {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  className?: string;
 }
 
-const SearchFIeld: FC<Props> = ({
+const SearchField: FC<Props> = ({
   value,
   onChange,
   placeholder = "Search...",
+  className,
+  ...rest
 }) => {
   return (
-    <div className="flex items-center gap-2 w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus-within:ring-2 focus-within:ring-blue-500 bg-white">
+    <div
+      className={clsx(
+        "flex items-center gap-2 w-[300px] transition-all duration-200 max-w-md px-4  py-2 border border-gray-300 rounded-lg shadow-sm focus-within:ring-2 focus-within:ring-blue-500 bg-white ",
+        className
+      )}
+      {...rest}
+    >
       <Search className="text-gray-500 w-5 h-5" />
       <input
         type="text"
@@ -26,4 +37,4 @@ const SearchFIeld: FC<Props> = ({
   );
 };
 
-export default SearchFIeld;
+export default SearchField;

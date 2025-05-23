@@ -53,8 +53,8 @@ export const TextField = <T,>({
         maxLength={maxLength}
         disabled={disabled}
         required={required}
-        className={`border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-          error ? "border-red-500" : "border-gray-300"
+        className={`border border-gray-300 ring-0 transition-all duration-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+          error ? "border-red-500" : ""
         } ${className}`}
         onKeyDown={(e) => onKeyDown(e)}
         {...rest}

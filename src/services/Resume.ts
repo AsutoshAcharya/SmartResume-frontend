@@ -1,11 +1,5 @@
-import axios from "axios";
 import api, { Api, apiPromise, setHeaders } from "./api";
-let uploadInstance = axios.create({
-  baseURL: "https://api.cloudinary.com/v1_1/dtl3zxaep",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+
 let baseUrl = "/resume";
 
 const addResume = (arg: Api) => {
@@ -20,6 +14,13 @@ const getResumesByUserId = (arg: Api) => {
   );
 };
 
-const Resume = { addResume, getResumesByUserId };
+const updateResume = (arg: Api) => {
+  const headers = setHeaders(arg.token, arg.userId);
+  return apiPromise(() =>
+    api.patch(`${baseUrl}/update`, arg.data, { ...headers })
+  );
+};
+
+const Resume = { addResume, getResumesByUserId, updateResume };
 
 export default Resume;

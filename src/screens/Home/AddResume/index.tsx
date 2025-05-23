@@ -33,6 +33,9 @@ import { useAuthStore } from "../../../store";
 import apiCall from "../../../helpers/apiCall";
 import Resume from "../../../services/Resume";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { TextField } from "../../../Components/TextField";
+import { Some } from "../../../helpers/Some";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -46,18 +49,18 @@ export const steps: Array<Step> = [
 interface Props {
   open: boolean;
   onClose: () => void;
-  resumeFormData?: ResumeForm;
+  prevResumeData?: ResumeForm;
   isViewing?: boolean;
 }
 
-const AddResume = ({ open, onClose, resumeFormData, isViewing }: Props) => {
+const AddResume = ({ open, onClose, prevResumeData, isViewing }: Props) => {
   const [step, setStep] = useState(0);
   const { cred } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<ResumeForm>(
-    resumeFormData ?? emptyResumeFormData
+    prevResumeData ?? emptyResumeFormData
   );
-
+  const client = useQueryClient();
   const updateSection = <T,>(
     section: keyof ResumeForm["resume"],
     index: number,
@@ -123,29 +126,37 @@ const AddResume = ({ open, onClose, resumeFormData, isViewing }: Props) => {
   };
 
   const handleSubmit = () => {
-    setLoading(true);
     const payload = {
       ...cred,
       data: {
-        title: "resume",
+        title: formData.title,
         resume: formData.resume,
+        ...(formData.id.length > 0 && {
+          id: formData.id,
+        }),
       },
     };
-    if (formData.id !== "") {
-      console.log("edit");
-      return;
-    }
+    const isUpdating = formData.id.length > 0;
 
     apiCall({
-      fn: () => Resume.addResume(payload),
-      onSuccess: () => toast.success("Resume has been added"),
-      onError: (err) => toast.error(err?.message || "Something went wrong"),
-      afterCall: () => {
+      fn: () => Resume[isUpdating ? "updateResume" : "addResume"](payload),
+      onSuccess: () => {
+        toast.success(
+          `Resume ${isUpdating ? "updated" : "added"} successfully`
+        );
         setFormData(emptyResumeFormData);
         setStep(0);
         onClose();
-        setLoading(false);
+
+        client.invalidateQueries(["get-user-resumes", cred.userId]);
       },
+      onError: (err) => {
+        toast.error(
+          Some.Array(err?.message).join(",") || "Something went wrong",
+          { toastId: "err" }
+        );
+      },
+      setLoading,
     });
   };
 
@@ -221,9 +232,20 @@ const AddResume = ({ open, onClose, resumeFormData, isViewing }: Props) => {
   return (
     <Modal open={open} onClose={onClose}>
       <div className="flex flex-row justify-between items-center mb-4">
-        <Text weight="bold" size="xl">
-          {formData.id !== "" ? "Edit Resume" : "Add Resume"}
-        </Text>
+        <div className="flex flex-row gap-4">
+          <Text weight="bold" size="xl">
+            {formData.id !== "" ? "Edit Resume" : "Add Resume"}
+          </Text>
+          <TextField
+            value={formData.title}
+            placeholder="Enter Resume Title"
+            type="text"
+            maxLength={50}
+            width={80}
+            onChange={(val) => setFormData({ ...formData, title: val })}
+          />
+        </div>
+
         <button
           className="rounded-full hover:bg-blue-200 text-gray-400 transition cursor-pointer"
           onClick={onClose}
@@ -250,6 +272,7 @@ const AddResume = ({ open, onClose, resumeFormData, isViewing }: Props) => {
               ? handleSubmit()
               : setStep((prev) => prev + 1)
           }
+          loading={loading}
         >
           {step === steps.length - 1 ? "Submit" : "Next"}
         </Button>

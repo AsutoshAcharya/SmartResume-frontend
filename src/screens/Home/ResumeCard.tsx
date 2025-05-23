@@ -4,23 +4,13 @@ import clsx from "clsx";
 import { Action, ResumeForm, State } from "./type";
 import Tooltip from "../../Components/Tooltip";
 import moment from "moment";
+import AddResume from "./AddResume";
 interface Props {
   resume: ResumeForm;
-  onEdit: () => void;
-  onView: () => void;
-  onDownload: () => void;
-  onDelete: () => void;
   className?: string;
 }
 
-const ResumeCard: FC<Props> = ({
-  resume,
-  onEdit,
-  onView,
-  onDownload,
-  onDelete,
-  className = "",
-}) => {
+const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
   const [state, setState] = useState(State.Default);
   const actions: Array<Action> = [
     {
@@ -76,6 +66,14 @@ const ResumeCard: FC<Props> = ({
           </Tooltip>
         ))}
       </div>
+      {[State.View, State.Edit].includes(state) && (
+        <AddResume
+          open
+          onClose={() => setState(State.Default)}
+          prevResumeData={resume}
+          isViewing={state === State.View}
+        />
+      )}
     </div>
   );
 };

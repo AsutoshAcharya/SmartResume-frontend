@@ -1,14 +1,14 @@
 import { User } from "lucide-react";
 import Text from "../../Components/Text";
 import ResumeCard from "./ResumeCard";
-import SearchFIeld from "../../Components/SearchField";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "../../Components/Button";
 import { useAuthStore } from "../../store";
 import HomeSkeleton from "./HomeSkeleton";
 import Loading from "../../Components/Loading";
 import useGetResumes from "./hooks/useGetResumes";
 import AddResume from "./AddResume";
+import SearchField from "../../Components/SearchField";
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -16,6 +16,12 @@ const Home = () => {
   const { cred } = useAuthStore();
   const { data: resumeData, isFetching } = useGetResumes();
 
+  const filteredResumes = useMemo(() => {
+    if (!resumeData) return [];
+    return resumeData.filter((r) =>
+      r.title.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [resumeData]);
   return (
     <div className="h-full p-4 flex flex-col">
       <div className="flex items-center gap-4">
@@ -24,9 +30,13 @@ const Home = () => {
             children={`Hello ${cred.name}`}
             weight="bold"
             size="xl"
-            className="text-gray-600"
+            className="text-gray-600 w-fit"
           />
-          <SearchFIeld value={search} onChange={(val) => setSearch(val)} />
+          <SearchField
+            placeholder="Search Resumes..."
+            value={search}
+            onChange={(val) => setSearch(val)}
+          />
         </div>
         <div className="grow" />
         <div className="flex flex-row items-center justify-center gap-4">
@@ -53,15 +63,8 @@ const Home = () => {
       >
         <div className="w-full">
           <div className="p-4 grid grid-cols-3 place-content-center gap-4 w-full">
-            {resumeData.map((resume) => (
-              <ResumeCard
-                key={resume.id}
-                resume={resume}
-                onEdit={() => {}}
-                onView={() => {}}
-                onDownload={() => {}}
-                onDelete={() => {}}
-              />
+            {filteredResumes.map((resume) => (
+              <ResumeCard key={resume.id} resume={resume} />
             ))}
           </div>
         </div>
