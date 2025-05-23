@@ -1,12 +1,11 @@
 import { FC, useState } from "react";
 import { Pencil, Eye, Download, Trash2 } from "lucide-react";
 import clsx from "clsx";
-import { Action, State } from "./type";
+import { Action, ResumeForm, State } from "./type";
 import Tooltip from "../../Components/Tooltip";
-
+import moment from "moment";
 interface Props {
-  title: string;
-  updatedAt: string;
+  resume: ResumeForm;
   onEdit: () => void;
   onView: () => void;
   onDownload: () => void;
@@ -15,8 +14,7 @@ interface Props {
 }
 
 const ResumeCard: FC<Props> = ({
-  title,
-  updatedAt,
+  resume,
   onEdit,
   onView,
   onDownload,
@@ -56,8 +54,13 @@ const ResumeCard: FC<Props> = ({
     >
       <div className="flex justify-between items-start">
         <div>
-          <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-          <p className="text-sm text-gray-500">Updated: {updatedAt}</p>
+          <h3 className="text-lg font-semibold text-gray-800">
+            {resume.title}
+          </h3>
+          <p className="text-sm text-gray-500">
+            Updated:{" "}
+            {moment(resume.updatedAt).format("DD MMM,YYYY [at] hh:mm A")}
+          </p>
         </div>
       </div>
       <div className="flex gap-2 mt-1">

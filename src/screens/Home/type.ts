@@ -77,6 +77,7 @@ export type ResumeForm = {
   id: string;
   title: string;
   resume: Resume;
+  updatedAt: Date;
 };
 
 export type InputType =

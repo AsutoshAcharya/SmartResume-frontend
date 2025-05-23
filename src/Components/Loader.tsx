@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 type LoaderProps = {
@@ -11,7 +12,10 @@ const Loader: React.FC<LoaderProps> = ({
 }) => {
   return (
     <div
-      className={`flex justify-center items-center w-full h-full my-auto ${className}`}
+      className={clsx(
+        `flex justify-center items-center w-full h-full my-auto `,
+        className
+      )}
     >
       <div
         className={`aspect-square w-full h-full max-w-[30px] max-h-[30px] animate-spin rounded-full border-3 border-solid border-t-transparent ${color}`}

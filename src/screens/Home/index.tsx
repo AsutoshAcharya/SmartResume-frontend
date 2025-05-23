@@ -3,19 +3,21 @@ import Text from "../../Components/Text";
 import ResumeCard from "./ResumeCard";
 import SearchFIeld from "../../Components/SearchField";
 import { useState } from "react";
-import AddResume from "./AddResume";
 import { Button } from "../../Components/Button";
 import { useAuthStore } from "../../store";
-import TextEditor from "./TextEditor";
-import ExportToPdf from "./ExportToPdf";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import HomeSkeleton from "./HomeSkeleton";
+import Loading from "../../Components/Loading";
+import useGetResumes from "./hooks/useGetResumes";
+import AddResume from "./AddResume";
 
 const Home = () => {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
-  const { cred, resumeForms } = useAuthStore();
+  const { cred } = useAuthStore();
+  const { data: resumeData, isFetching } = useGetResumes();
+
   return (
-    <div className="h-full p-4">
+    <div className="h-full p-4 flex flex-col">
       <div className="flex items-center gap-4">
         <div className="flex flex-row items-center gap-4">
           <Text
@@ -44,25 +46,35 @@ const Home = () => {
           )}
         </div>
       </div>
-      <div className="p-4 grid grid-cols-2 place-content-center gap-4">
-        <ResumeCard
-          title="Frontend Developer Resume"
-          updatedAt="May 2, 2025"
-          onEdit={() => {}}
-          onView={() => {}}
-          onDownload={() => {}}
-          onDelete={() => {}}
-        />
-      </div>
-      <TextEditor />
-      <AddResume open={open} onClose={() => setOpen(false)} />
+      <Loading
+        loading={isFetching}
+        className="flex grow"
+        Loader={<HomeSkeleton />}
+      >
+        <div className="w-full">
+          <div className="p-4 grid grid-cols-3 place-content-center gap-4 w-full">
+            {resumeData.map((resume) => (
+              <ResumeCard
+                key={resume.id}
+                resume={resume}
+                onEdit={() => {}}
+                onView={() => {}}
+                onDownload={() => {}}
+                onDelete={() => {}}
+              />
+            ))}
+          </div>
+        </div>
+      </Loading>
 
-      <PDFDownloadLink
+      {open && <AddResume open={open} onClose={() => setOpen(false)} />}
+
+      {/* <PDFDownloadLink
         document={<ExportToPdf data={resumeForms[0]} />}
         fileName="resume.pdf"
       >
         {({ loading }) => (loading ? "Loading..." : "Download Resume")}
-      </PDFDownloadLink>
+      </PDFDownloadLink> */}
     </div>
   );
 };

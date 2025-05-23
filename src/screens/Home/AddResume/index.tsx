@@ -47,11 +47,13 @@ interface Props {
   open: boolean;
   onClose: () => void;
   resumeFormData?: ResumeForm;
+  isViewing?: boolean;
 }
 
-const AddResume = ({ open, onClose, resumeFormData }: Props) => {
+const AddResume = ({ open, onClose, resumeFormData, isViewing }: Props) => {
   const [step, setStep] = useState(0);
-  const { cred, addResumeToStore, resumeForms } = useAuthStore();
+  const { cred } = useAuthStore();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<ResumeForm>(
     resumeFormData ?? emptyResumeFormData
   );
@@ -121,25 +123,29 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     const payload = {
       ...cred,
       data: {
         title: "resume",
-        resume: resumeForms[0],
+        resume: formData.resume,
       },
     };
+    if (formData.id !== "") {
+      console.log("edit");
+      return;
+    }
 
-    // return console.log(formData);
-    // addResumeToStore(resumeForms[0]);
     apiCall({
       fn: () => Resume.addResume(payload),
       onSuccess: () => toast.success("Resume has been added"),
       onError: (err) => toast.error(err?.message || "Something went wrong"),
-      // afterCall: () => {
-      //   setFormData(emptyResumeFormData);
-      //   setStep(0);
-      //   onClose();
-      // },
+      afterCall: () => {
+        setFormData(emptyResumeFormData);
+        setStep(0);
+        onClose();
+        setLoading(false);
+      },
     });
   };
 
@@ -216,7 +222,7 @@ const AddResume = ({ open, onClose, resumeFormData }: Props) => {
     <Modal open={open} onClose={onClose}>
       <div className="flex flex-row justify-between items-center mb-4">
         <Text weight="bold" size="xl">
-          Add Resume
+          {formData.id !== "" ? "Edit Resume" : "Add Resume"}
         </Text>
         <button
           className="rounded-full hover:bg-blue-200 text-gray-400 transition cursor-pointer"

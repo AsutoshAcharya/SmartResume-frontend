@@ -1,13 +1,11 @@
-import React from "react";
 import {
   Page,
   Text,
   View,
   Document,
   StyleSheet,
-  PDFDownloadLink,
   Font,
-  Link, // <-- import Link for clickable URLs
+  Link,
 } from "@react-pdf/renderer";
 import { ResumeForm } from "./type";
 

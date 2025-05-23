@@ -24,6 +24,7 @@ export const emptyResumeFormData: ResumeForm = {
     others: [],
     skills: [],
   },
+  updatedAt: new Date(),
 };
 export const emptyExperience: Experience = {
   companyName: "",

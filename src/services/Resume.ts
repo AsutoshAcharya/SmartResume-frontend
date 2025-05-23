@@ -13,6 +13,13 @@ const addResume = (arg: Api) => {
   return apiPromise(() => api.post(`${baseUrl}/add`, arg.data, { ...headers }));
 };
 
-const Resume = { addResume };
+const getResumesByUserId = (arg: Api) => {
+  const headers = setHeaders(arg.token, arg.userId);
+  return apiPromise(() =>
+    api.get(`${baseUrl}/get_all/${arg.userId}`, { ...headers })
+  );
+};
+
+const Resume = { addResume, getResumesByUserId };
 
 export default Resume;
