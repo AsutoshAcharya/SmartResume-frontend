@@ -16,7 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Action, ResumeForm, State } from "./type";
 import { useAuthStore } from "../../store";
 import AddResume from "./AddResume";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { pdf, PDFDownloadLink } from "@react-pdf/renderer";
 import ExportToPdf from "./ExportToPdf";
 
 interface Props {
@@ -43,6 +43,19 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
       setLoading,
     });
   }
+
+  async function handleDownload() {
+    setState(State.Download);
+    const blob = await pdf(<ExportToPdf data={resume} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${resume.title}.pdf`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setState(State.Default);
+  }
+
   const actions: Array<Action> = [
     {
       state: State.Edit,
@@ -59,15 +72,8 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
     },
     {
       state: State.Download,
-      onClick: () => setState(State.Download),
-      Icon: (
-        <PDFDownloadLink
-          document={<ExportToPdf data={resume} />}
-          fileName={`${resume.title}.pdf`}
-        >
-          <Download size={18} className="text-yellow-600" />
-        </PDFDownloadLink>
-      ),
+      onClick: handleDownload,
+      Icon: <Download size={18} className="text-yellow-600" />,
       color: "yellow",
     },
     {
