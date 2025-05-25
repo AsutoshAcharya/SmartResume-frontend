@@ -147,7 +147,6 @@ const AddResume = ({ open, onClose, prevResumeData, isViewing }: Props) => {
         setFormData(emptyResumeFormData);
         setStep(0);
         onClose();
-
         client.invalidateQueries(["get-user-resumes", cred.userId]);
       },
       onError: (err) => {

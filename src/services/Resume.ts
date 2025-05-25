@@ -21,6 +21,13 @@ const updateResume = (arg: Api) => {
   );
 };
 
-const Resume = { addResume, getResumesByUserId, updateResume };
+const deleteResume = (arg: Api) => {
+  const headers = setHeaders(arg.token, arg.userId);
+  return apiPromise(() =>
+    api.delete(`${baseUrl}/${arg.resumeId}`, { ...headers })
+  );
+};
+
+const Resume = { addResume, getResumesByUserId, updateResume, deleteResume };
 
 export default Resume;

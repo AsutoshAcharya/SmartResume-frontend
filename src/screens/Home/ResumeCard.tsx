@@ -5,13 +5,36 @@ import { Action, ResumeForm, State } from "./type";
 import Tooltip from "../../Components/Tooltip";
 import moment from "moment";
 import AddResume from "./AddResume";
+import Confirm from "../../Components/Confirm";
+import apiCall from "../../helpers/apiCall";
+import Resume from "../../services/Resume";
+import { useAuthStore } from "../../store";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 interface Props {
   resume: ResumeForm;
   className?: string;
 }
 
 const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
+  const { cred } = useAuthStore();
   const [state, setState] = useState(State.Default);
+  const [loading, setLoading] = useState(false);
+  const client = useQueryClient();
+
+  function handleDelete() {
+    setLoading(true);
+    apiCall({
+      fn: () => Resume.deleteResume({ ...cred, resumeId: resume.id }),
+      onSuccess: () => {
+        toast.success("Resume has been deleted");
+        client.invalidateQueries(["get-user-resumes", cred.userId]);
+        setState(State.Default);
+      },
+      onError: () => toast.error("Something went wrong!"),
+      setLoading,
+    });
+  }
   const actions: Array<Action> = [
     {
       state: State.Edit,
@@ -72,6 +95,18 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
           onClose={() => setState(State.Default)}
           prevResumeData={resume}
           isViewing={state === State.View}
+        />
+      )}
+      {state === State.Delete && (
+        <Confirm
+          open
+          onClose={() => setState(State.Default)}
+          loading={loading}
+          title="Are you sure you want to delete this resume ?"
+          variant="destructive"
+          onConfirm={handleDelete}
+          className="w-[350px]"
+          confirmText="Yes ,Delete"
         />
       )}
     </div>
