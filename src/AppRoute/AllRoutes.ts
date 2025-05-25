@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { AppRoute } from "./type";
 const Main = lazy(() => import("../screens/Main"));
 const Home = lazy(() => import("../screens/Home"));
-const Settings = lazy(() => import("../screens/Settings"));
+const Templates = lazy(() => import("../screens/Templates"));
 const Auth = lazy(() => import("../screens/Auth"));
 export type PublicRouteKeys = "MAIN" | "AUTH";
 export type PrivateRouteKeys = "HOME" | "SETTINGS";
@@ -28,9 +28,9 @@ class AllRoutes {
       Element: Home,
     },
     SETTINGS: {
-      title: "Settings",
-      path: "/settings",
-      Element: Settings,
+      title: "Templates",
+      path: "/templates",
+      Element: Templates,
     },
   };
   static INDEPENDENT: Record<string, AppRoute> = {};

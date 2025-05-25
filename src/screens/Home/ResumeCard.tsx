@@ -1,16 +1,24 @@
-import { FC, useState } from "react";
-import { Pencil, Eye, Download, Trash2 } from "lucide-react";
+import { type FC, Fragment, useState } from "react";
+import {
+  Pencil,
+  Eye,
+  Download,
+  Trash2,
+  Calendar,
+  FileText,
+} from "lucide-react";
 import clsx from "clsx";
-import { Action, ResumeForm, State } from "./type";
-import Tooltip from "../../Components/Tooltip";
-import moment from "moment";
-import AddResume from "./AddResume";
 import Confirm from "../../Components/Confirm";
-import apiCall from "../../helpers/apiCall";
 import Resume from "../../services/Resume";
-import { useAuthStore } from "../../store";
+import apiCall from "../../helpers/apiCall";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { Action, ResumeForm, State } from "./type";
+import { useAuthStore } from "../../store";
+import AddResume from "./AddResume";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import ExportToPdf from "./ExportToPdf";
+
 interface Props {
   resume: ResumeForm;
   className?: string;
@@ -40,54 +48,124 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
       state: State.Edit,
       onClick: () => setState(State.Edit),
       Icon: <Pencil size={18} className="text-blue-600" />,
+
+      color: "blue",
     },
     {
       state: State.View,
       onClick: () => setState(State.View),
       Icon: <Eye size={18} className=" text-green-600" />,
+      color: "green",
     },
     {
       state: State.Download,
       onClick: () => setState(State.Download),
-      Icon: <Download size={18} className="text-yellow-600" />,
+      Icon: (
+        <PDFDownloadLink
+          document={<ExportToPdf data={resume} />}
+          fileName={`${resume.title}.pdf`}
+        >
+          <Download size={18} className="text-yellow-600" />
+        </PDFDownloadLink>
+      ),
+      color: "yellow",
     },
     {
       state: State.Delete,
       onClick: () => setState(State.Delete),
       Icon: <Trash2 size={18} className="text-red-600" />,
+
+      color: "red",
     },
   ];
 
   return (
-    <div
-      className={clsx(
-        " bg-white shadow-md hover:shadow-lg transition rounded-xl p-4 border border-gray-200 w-full",
-        className
-      )}
-    >
-      <div className="flex justify-between items-start">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800">
-            {resume.title}
-          </h3>
-          <p className="text-sm text-gray-500">
-            Updated:{" "}
-            {moment(resume.updatedAt).format("DD MMM,YYYY [at] hh:mm A")}
-          </p>
+    <Fragment>
+      <div
+        className={clsx(
+          "group relative bg-white shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl border border-gray-100 overflow-hidden transform hover:-translate-y-1",
+          className
+        )}
+      >
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-gray-100">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-white rounded-lg shadow-sm">
+                  <FileText className="w-5 h-5 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 truncate">
+                  {resume.title}
+                </h3>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Calendar className="w-4 h-4" />
+                <span>
+                  Updated {new Date(resume.updatedAt).toLocaleDateString()}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex gap-2 mt-1">
-        {actions.map((action) => (
-          <Tooltip placement="bottom" content={action.state}>
-            <button
-              key={action.state}
-              onClick={action.onClick}
-              className="p-2 rounded-md hover:bg-gray-200 cursor-pointer transition"
-            >
-              {action.Icon}
-            </button>
-          </Tooltip>
-        ))}
+
+        <div className="p-6">
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="text-center p-3 bg-gray-50 rounded-lg">
+              <div className="text-lg font-bold text-gray-900">
+                {new Date(resume.createdAt).toLocaleDateString()}
+              </div>
+              <div className="text-xs text-gray-600">Created</div>
+            </div>
+            <div className="text-center p-3 bg-gray-50 rounded-lg">
+              <div className="text-lg font-bold text-gray-900">Recently</div>
+              <div className="text-xs text-gray-600">Last Modified</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {actions.slice(0, 2).map((action) => (
+              <button
+                key={action.state}
+                onClick={action.onClick}
+                className={clsx(
+                  "flex items-center justify-center cursor-pointer gap-2 p-3 rounded-lg font-medium transition-all duration-200 hover:scale-105",
+                  action.color === "blue" &&
+                    "bg-blue-50 text-blue-700 hover:bg-blue-100",
+                  action.color === "green" &&
+                    "bg-green-50 text-green-700 hover:bg-green-100"
+                )}
+              >
+                {action.Icon}
+                <span className="text-sm">{action.state}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-2 mt-3">
+            {actions.slice(2).map((action) => (
+              <button
+                key={action.state}
+                onClick={action.onClick}
+                className={clsx(
+                  "flex-1 flex items-center cursor-pointer justify-center gap-2 p-2 rounded-lg font-medium transition-all duration-200 text-sm",
+                  action.color === "yellow" &&
+                    "bg-yellow-50 text-yellow-700 hover:bg-yellow-100",
+                  action.color === "red" &&
+                    "bg-red-50 text-red-700 hover:bg-red-100"
+                )}
+              >
+                {action.Icon}
+                <span>{action.state}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="absolute top-4 right-4">
+          <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-t from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       </div>
       {[State.View, State.Edit].includes(state) && (
         <AddResume
@@ -109,7 +187,7 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
           confirmText="Yes ,Delete"
         />
       )}
-    </div>
+    </Fragment>
   );
 };
 

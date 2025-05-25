@@ -18,6 +18,7 @@ function useGetResumes(options: Options = {}) {
       title: Some.String(d?.title),
       resume: d?.resume as ResumeType,
       updatedAt: new Date(d?.updatedAt),
+      createdAt: new Date(d?.createdAt),
     };
   }
   async function getAllUserSpecificResume() {

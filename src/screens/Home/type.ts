@@ -19,6 +19,7 @@ export type Action = {
   state: State;
   Icon: ReactElement;
   onClick: () => void;
+  color: string;
 };
 
 export type Step = {
@@ -78,6 +79,7 @@ export type ResumeForm = {
   title: string;
   resume: Resume;
   updatedAt: Date;
+  createdAt: Date;
 };
 
 export type InputType =
