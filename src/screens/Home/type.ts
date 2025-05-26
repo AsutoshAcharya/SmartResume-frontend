@@ -113,3 +113,14 @@ export interface Field {
   required?: boolean;
   validate?: (val: string) => boolean;
 }
+
+export const DroppableIds: Record<
+  keyof Omit<Resume, "personalInfo">,
+  keyof Omit<Resume, "personalInfo">
+> = {
+  experience: "experience",
+  projects: "projects",
+  education: "education",
+  skills: "skills",
+  others: "others",
+};

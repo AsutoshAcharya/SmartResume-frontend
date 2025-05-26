@@ -9,7 +9,13 @@ import {
   DiamondPlus,
 } from "lucide-react";
 
-import { PersonalInfo as PersonalInfoType, ResumeForm, Step } from "../type";
+import {
+  PersonalInfo as PersonalInfoType,
+  Resume as ResumeType,
+  ResumeForm,
+  Step,
+  DroppableIds,
+} from "../type";
 
 import {
   emptyEducation,
@@ -36,6 +42,7 @@ import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { TextField } from "../../../Components/TextField";
 import { Some } from "../../../helpers/Some";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -227,6 +234,27 @@ const AddResume = ({ open, onClose, prevResumeData, isViewing }: Props) => {
         return null;
     }
   };
+  function updateAfterDrop<T extends keyof Omit<ResumeType, "personalInfo">>(
+    key: T,
+    val: ResumeType[T]
+  ) {
+    setFormData({
+      ...formData,
+      resume: { ...formData.resume, [key]: val },
+    });
+  }
+
+  const onDragEnd = <K extends keyof Omit<ResumeType, "personalInfo">>(
+    result: DropResult
+  ) => {
+    const { source, destination } = result;
+    if (!destination) return;
+    const droppableId = source.droppableId as K;
+    const items = [...formData.resume[droppableId]] as ResumeType[K];
+    const [reorderedItem] = items.splice(source.index, 1);
+    items.splice(destination.index, 0, reorderedItem as any);
+    updateAfterDrop(droppableId, items);
+  };
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -254,8 +282,11 @@ const AddResume = ({ open, onClose, prevResumeData, isViewing }: Props) => {
       </div>
 
       <Stepper steps={steps} current={step} />
-      <div className="overflow-y-auto max-h-[60vh]">{renderStepContent()}</div>
-
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="overflow-y-auto max-h-[60vh]">
+          {renderStepContent()}
+        </div>
+      </DragDropContext>
       <div className="flex justify-between mt-6">
         <Button
           variant="secondary"
