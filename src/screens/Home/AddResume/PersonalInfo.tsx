@@ -5,6 +5,8 @@ import { personalInfoFields } from "./DataField";
 import { Button } from "../../../Components/Button";
 import { Link as LinkIcon, X } from "lucide-react";
 import { toast } from "react-toastify";
+import { useViewStore } from "../../../store/viewStore";
+import AddField from "./components/AddField";
 
 interface Props {
   data: PersonalInfoType;
@@ -12,16 +14,7 @@ interface Props {
 }
 
 const PersonalInfo: FC<Props> = ({ data, update }) => {
-  const [link, setLink] = useState("");
-
-  const handleAddLink = () => {
-    if (data.links.length === 3) return toast.warn("Can only add 3 links");
-    const trimmed = link.trim();
-    if (trimmed && !data.links.includes(trimmed)) {
-      update("links", [...data.links, trimmed]);
-      setLink("");
-    }
-  };
+  const { isViewingResume } = useViewStore();
 
   const handleRemoveLink = (index: number) => {
     const updatedLinks = [...data.links];
@@ -43,6 +36,7 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
                 placeholder={placeholder}
                 maxLength={maxLength}
                 className="border-b"
+                disabled={isViewingResume}
               />
             </div>
           )
@@ -67,32 +61,35 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
                     {l}
                   </a>
                 </div>
-                <button
-                  onClick={() => handleRemoveLink(index)}
-                  className="cursor-pointer"
-                >
-                  <X size={16} className="text-gray-400 hover:text-gray-200" />
-                </button>
+                {!isViewingResume && (
+                  <button
+                    onClick={() => handleRemoveLink(index)}
+                    className="cursor-pointer"
+                  >
+                    <X
+                      size={16}
+                      className="text-gray-400 hover:text-gray-200"
+                    />
+                  </button>
+                )}
               </li>
             ))}
           </ul>
         )}
       </div>
-      <div className="mt-6 p-2">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Add Link
-        </label>
-        <div className="flex gap-2">
-          <TextField
-            type="text"
-            placeholder="https://your-link.com"
-            value={link}
-            onChange={(val) => setLink(val)}
-            className="flex-1"
-          />
-          <Button onClick={handleAddLink}>+ Add</Button>
-        </div>
-      </div>
+      {!isViewingResume && (
+        <AddField
+          className="w-fit"
+          onAdd={(val) => {
+            if (data.links.length === 3)
+              return toast.warn("Can only add 3 links");
+            const trimmed = val.trim();
+            if (trimmed && !data.links.includes(trimmed)) {
+              update("links", [...data.links, trimmed]);
+            }
+          }}
+        />
+      )}
     </Fragment>
   );
 };

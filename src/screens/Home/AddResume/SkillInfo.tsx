@@ -7,6 +7,7 @@ import { skillFields } from "./DataField";
 import Chip from "./components/Chip";
 import { toast } from "react-toastify";
 import AddField from "./components/AddField";
+import { useViewStore } from "../../../store/viewStore";
 
 interface Props {
   skills: Array<OtherInfo>; //same type as other
@@ -25,31 +26,36 @@ const SkillInfo: FC<Props> = ({
   addSkill,
   removeSkill,
 }) => {
+  const { isViewingResume } = useViewStore();
   return (
     <Fragment>
-      <div className="mb-6 sticky top-0 z-10 w-full shadow-md p-4 rounded bg-white">
-        <Button
-          onClick={addSkill}
-          className="flex items-center gap-2 shadow-md"
-        >
-          <Plus size={16} />
-          Add Skills
-        </Button>
-      </div>
+      {!isViewingResume && (
+        <div className="mb-6 sticky top-0 z-10 w-full shadow-md p-4 rounded bg-white">
+          <Button
+            onClick={addSkill}
+            className="flex items-center gap-2 shadow-md"
+          >
+            <Plus size={16} />
+            Add Skills
+          </Button>
+        </div>
+      )}
       {skills.map((data, index) => (
         <div
           key={index}
           className="border border-gray-200 p-6 rounded-2xl shadow-md mb-8 bg-white relative transition hover:shadow-lg"
         >
-          <div className="absolute top-4 right-4">
-            <button
-              onClick={() => removeSkill(index)}
-              className="text-red-500 hover:text-red-700 cursor-pointer"
-              title="Remove Skill"
-            >
-              <Trash2 size={18} />
-            </button>
-          </div>
+          {!isViewingResume && (
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={() => removeSkill(index)}
+                className="text-red-500 hover:text-red-700 cursor-pointer"
+                title="Remove Skill"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          )}
 
           <h3 className="text-lg font-semibold mb-4 text-gray-800">
             Skills {index + 1}
@@ -70,6 +76,7 @@ const SkillInfo: FC<Props> = ({
                       placeholder={placeholder}
                       maxLength={maxLength}
                       required={required}
+                      disabled={isViewingResume}
                     />
                   )}
                 </div>
@@ -87,22 +94,25 @@ const SkillInfo: FC<Props> = ({
                   updateSkills(index, "info", updated);
                 }}
                 className="text-cyan-950"
+                disabled={isViewingResume}
               />
             ))}
           </div>
-          <AddField
-            onAdd={(val) => {
-              if (data.info.length === 30) {
-                return toast.warn("Can't add more than 30 skill", {
-                  toastId: "warn",
-                });
-              }
-              if (val.trim()) {
-                updateSkills(index, "info", [...data.info, val.trim()]);
-              }
-            }}
-            className="w-fit"
-          />
+          {!isViewingResume && (
+            <AddField
+              onAdd={(val) => {
+                if (data.info.length === 30) {
+                  return toast.warn("Can't add more than 30 skill", {
+                    toastId: "warn",
+                  });
+                }
+                if (val.trim()) {
+                  updateSkills(index, "info", [...data.info, val.trim()]);
+                }
+              }}
+              className="w-fit"
+            />
+          )}
         </div>
       ))}
     </Fragment>

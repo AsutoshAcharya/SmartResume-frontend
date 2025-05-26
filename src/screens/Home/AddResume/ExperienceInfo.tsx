@@ -10,6 +10,7 @@ import Chip from "./components/Chip";
 import { toast } from "react-toastify";
 import Question from "../../../Components/Question";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import { useViewStore } from "../../../store/viewStore";
 
 interface Props {
   experiences: Array<Experience>;
@@ -29,17 +30,20 @@ const ExperienceInfo: FC<Props> = ({
   removeExperience,
 }) => {
   const [newDescription, setNewDescription] = useState("");
+  const { isViewingResume } = useViewStore();
   return (
     <Fragment>
-      <div className="mb-6 sticky top-0 z-10 w-full shadow-md p-4 rounded bg-white">
-        <Button
-          onClick={addExperience}
-          className="flex items-center gap-2 shadow-md"
-        >
-          <Plus size={16} />
-          Add Experience
-        </Button>
-      </div>
+      {!isViewingResume && (
+        <div className="mb-6 sticky top-0 z-10 w-full shadow-md p-4 rounded bg-white">
+          <Button
+            onClick={addExperience}
+            className="flex items-center gap-2 shadow-md"
+          >
+            <Plus size={16} />
+            Add Experience
+          </Button>
+        </div>
+      )}
       <Droppable droppableId={DroppableIds.experience}>
         {(provided) => (
           <div ref={provided?.innerRef}>
@@ -56,21 +60,25 @@ const ExperienceInfo: FC<Props> = ({
                     {...provided.draggableProps}
                     className="border border-gray-200 p-6 rounded-2xl shadow-md mb-8 bg-white  transition hover:shadow-lg relative"
                   >
-                    <div
-                      className="absolute top-[50%] left-3  transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                      {...provided.dragHandleProps}
-                    >
-                      <GripVertical className="text-gray-700" />
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <button
-                        onClick={() => removeExperience(index)}
-                        className="text-red-500 hover:text-red-700 cursor-pointer"
-                        title="Remove experience"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
+                    {!isViewingResume && (
+                      <Fragment>
+                        <div
+                          className="absolute top-[50%] left-3  transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                          {...provided.dragHandleProps}
+                        >
+                          <GripVertical className="text-gray-700" />
+                        </div>
+                        <div className="absolute top-4 right-4">
+                          <button
+                            onClick={() => removeExperience(index)}
+                            className="text-red-500 hover:text-red-700 cursor-pointer"
+                            title="Remove experience"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </Fragment>
+                    )}
 
                     <h3 className="text-lg font-semibold mb-4 text-gray-800">
                       Experience {index + 1}
@@ -106,6 +114,7 @@ const ExperienceInfo: FC<Props> = ({
                                   placeholder={placeholder}
                                   maxLength={maxLength}
                                   required={required}
+                                  disabled={isViewingResume}
                                 />
                               )}
                               {type === "question" && (
@@ -115,6 +124,7 @@ const ExperienceInfo: FC<Props> = ({
                                   checked={Some.Boolean(
                                     data[key as ExperienceInfoKeys]
                                   )}
+                                  disabled={isViewingResume}
                                   onChange={(val) =>
                                     updateExperience(
                                       index,
@@ -161,6 +171,7 @@ const ExperienceInfo: FC<Props> = ({
                                       placeholder={placeholder}
                                       required={required}
                                       className={idx === 1 ? "ml-5" : ""}
+                                      disabled={isViewingResume}
                                     />
                                   )}
                                 </Fragment>
@@ -182,42 +193,45 @@ const ExperienceInfo: FC<Props> = ({
                             updateExperience(index, "descriptions", updated);
                           }}
                           className="w-full justify-between text-cyan-950 rounded-md"
+                          disabled={isViewingResume}
                         />
                       ))}
                     </div>
 
-                    <div className="flex items-center justify-between gap-2 p-2">
-                      <textarea
-                        value={newDescription}
-                        onChange={(e) => setNewDescription(e.target.value)}
-                        id="message"
-                        rows={4}
-                        className="block p-2.5 w-[80%] resize-none text-sm  bg-gray-50 rounded-lg border border-gray-200 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Write description about your experience"
-                      />
-                      <Button
-                        onClick={() => {
-                          if (data.descriptions.length === 10) {
-                            setNewDescription("");
-                            return toast.warn(
-                              "Can't add more than 10 descriptions",
-                              {
-                                toastId: "warn",
-                              }
-                            );
-                          }
-                          if (newDescription.trim()) {
-                            updateExperience(index, "descriptions", [
-                              ...data.descriptions,
-                              newDescription.trim(),
-                            ]);
-                            setNewDescription("");
-                          }
-                        }}
-                      >
-                        + Add
-                      </Button>
-                    </div>
+                    {!isViewingResume && (
+                      <div className="flex items-center justify-between gap-2 p-2">
+                        <textarea
+                          value={newDescription}
+                          onChange={(e) => setNewDescription(e.target.value)}
+                          id="message"
+                          rows={4}
+                          className="block p-2.5 w-[80%] resize-none text-sm  bg-gray-50 rounded-lg border border-gray-200 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="Write description about your experience"
+                        />
+                        <Button
+                          onClick={() => {
+                            if (data.descriptions.length === 10) {
+                              setNewDescription("");
+                              return toast.warn(
+                                "Can't add more than 10 descriptions",
+                                {
+                                  toastId: "warn",
+                                }
+                              );
+                            }
+                            if (newDescription.trim()) {
+                              updateExperience(index, "descriptions", [
+                                ...data.descriptions,
+                                newDescription.trim(),
+                              ]);
+                              setNewDescription("");
+                            }
+                          }}
+                        >
+                          + Add
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
               </Draggable>

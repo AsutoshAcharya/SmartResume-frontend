@@ -14,7 +14,6 @@ import {
   Resume as ResumeType,
   ResumeForm,
   Step,
-  DroppableIds,
 } from "../type";
 
 import {
@@ -43,6 +42,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { TextField } from "../../../Components/TextField";
 import { Some } from "../../../helpers/Some";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { useViewStore } from "../../../store/viewStore";
 
 export const steps: Array<Step> = [
   { name: "Personal Info", Icon: User },
@@ -57,12 +57,12 @@ interface Props {
   open: boolean;
   onClose: () => void;
   prevResumeData?: ResumeForm;
-  isViewing?: boolean;
 }
 
-const AddResume = ({ open, onClose, prevResumeData, isViewing }: Props) => {
+const AddResume = ({ open, onClose, prevResumeData }: Props) => {
   const [step, setStep] = useState(0);
   const { cred } = useAuthStore();
+  const { isViewingResume } = useViewStore();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<ResumeForm>(
     prevResumeData ?? emptyResumeFormData
@@ -261,7 +261,11 @@ const AddResume = ({ open, onClose, prevResumeData, isViewing }: Props) => {
       <div className="flex flex-row justify-between items-center mb-4">
         <div className="flex flex-row gap-4">
           <Text weight="bold" size="xl">
-            {formData.id !== "" ? "Edit Resume" : "Add Resume"}
+            {formData.id !== ""
+              ? isViewingResume
+                ? "View Resume"
+                : "Edit Resume"
+              : "Add Resume"}
           </Text>
           <TextField
             value={formData.title}
@@ -270,6 +274,7 @@ const AddResume = ({ open, onClose, prevResumeData, isViewing }: Props) => {
             maxLength={50}
             width={80}
             onChange={(val) => setFormData({ ...formData, title: val })}
+            disabled={isViewingResume}
           />
         </div>
 
@@ -303,6 +308,7 @@ const AddResume = ({ open, onClose, prevResumeData, isViewing }: Props) => {
               : setStep((prev) => prev + 1)
           }
           loading={loading}
+          disabled={step === steps.length - 1 && isViewingResume}
         >
           {step === steps.length - 1 ? "Submit" : "Next"}
         </Button>

@@ -6,6 +6,7 @@ import { educationDataFields, educationDateFields } from "./DataField";
 import { TextField } from "../../../Components/TextField";
 import { DateField } from "../../../Components/DateField";
 import { Some } from "../../../helpers/Some";
+import { useViewStore } from "../../../store/viewStore";
 
 interface Props {
   educations: Array<Education>;
@@ -24,31 +25,36 @@ const EducationInfo: FC<Props> = ({
   addEducation,
   removeEducation,
 }) => {
+  const { isViewingResume } = useViewStore();
   return (
     <Fragment>
-      <div className="mb-6 sticky top-0 z-10 w-full shadow-md p-4 rounded bg-white">
-        <Button
-          onClick={addEducation}
-          className="flex items-center gap-2 shadow-md"
-        >
-          <Plus size={16} />
-          Add Education
-        </Button>
-      </div>
+      {!isViewingResume && (
+        <div className="mb-6 sticky top-0 z-10 w-full shadow-md p-4 rounded bg-white">
+          <Button
+            onClick={addEducation}
+            className="flex items-center gap-2 shadow-md"
+          >
+            <Plus size={16} />
+            Add Education
+          </Button>
+        </div>
+      )}
       {educations.map((data, index) => (
         <div
           key={index}
           className="border border-gray-200 p-6 rounded-2xl shadow-md mb-8 bg-white relative transition hover:shadow-lg"
         >
-          <div className="absolute top-4 right-4">
-            <button
-              onClick={() => removeEducation(index)}
-              className="text-red-500 hover:text-red-700 cursor-pointer"
-              title="Remove experience"
-            >
-              <Trash2 size={18} />
-            </button>
-          </div>
+          {!isViewingResume && (
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={() => removeEducation(index)}
+                className="text-red-500 hover:text-red-700 cursor-pointer"
+                title="Remove experience"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          )}
 
           <h3 className="text-lg font-semibold mb-4 text-gray-800">
             Education {index + 1}
@@ -69,6 +75,7 @@ const EducationInfo: FC<Props> = ({
                       placeholder={placeholder}
                       maxLength={maxLength}
                       required={required}
+                      disabled={isViewingResume}
                     />
                   )}
                 </div>
@@ -99,6 +106,7 @@ const EducationInfo: FC<Props> = ({
                           placeholder={placeholder}
                           required={required}
                           className={idx === 1 ? "ml-5" : ""}
+                          disabled={isViewingResume}
                         />
                       )}
                     </Fragment>

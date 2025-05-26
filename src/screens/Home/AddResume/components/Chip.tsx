@@ -6,8 +6,9 @@ interface Props {
   item: string;
   onDelete: () => void;
   className?: string;
+  disabled?: boolean;
 }
-const Chip: FC<Props> = ({ item, onDelete, className }) => {
+const Chip: FC<Props> = ({ item, onDelete, className, disabled = false }) => {
   return (
     <div
       className={clsx(
@@ -15,15 +16,17 @@ const Chip: FC<Props> = ({ item, onDelete, className }) => {
         className
       )}
     >
-      <span className="text-wrap text-ellipsis wrap-break-word max-w-[90%]">
+      <span className="text-wrap text-ellipsis wrap-break-word max-w-[100%]">
         {item}
       </span>
-      <button
-        onClick={onDelete}
-        className="ml-2 text-gray-400 hover:text-gray-200 cursor-pointer"
-      >
-        <X size={14} />
-      </button>
+      {!disabled && (
+        <button
+          onClick={onDelete}
+          className="ml-2 text-gray-400 hover:text-gray-200 cursor-pointer"
+        >
+          <X size={14} />
+        </button>
+      )}
     </div>
   );
 };

@@ -16,8 +16,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Action, ResumeForm, State } from "./type";
 import { useAuthStore } from "../../store";
 import AddResume from "./AddResume";
-import { pdf, PDFDownloadLink } from "@react-pdf/renderer";
+import { pdf } from "@react-pdf/renderer";
 import ExportToPdf from "./ExportToPdf";
+import { useViewStore } from "../../store/viewStore";
 
 interface Props {
   resume: ResumeForm;
@@ -26,6 +27,7 @@ interface Props {
 
 const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
   const { cred } = useAuthStore();
+  const { onViewAction } = useViewStore();
   const [state, setState] = useState(State.Default);
   const [loading, setLoading] = useState(false);
   const client = useQueryClient();
@@ -66,7 +68,10 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
     },
     {
       state: State.View,
-      onClick: () => setState(State.View),
+      onClick: () => {
+        setState(State.View);
+        onViewAction(true);
+      },
       Icon: <Eye size={18} className=" text-green-600" />,
       color: "green",
     },
@@ -176,9 +181,11 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
       {[State.View, State.Edit].includes(state) && (
         <AddResume
           open
-          onClose={() => setState(State.Default)}
+          onClose={() => {
+            setState(State.Default);
+            onViewAction(false);
+          }}
           prevResumeData={resume}
-          isViewing={state === State.View}
         />
       )}
       {state === State.Delete && (
