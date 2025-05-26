@@ -6,9 +6,12 @@ import clsx from "clsx";
 import { FileText } from "lucide-react";
 import { useAuthStore } from "../store";
 import { Button } from "../Components/Button";
+import { useDispatch } from "react-redux";
+import { logOut } from "../redux/authSlice";
 
 const SideBar = () => {
   const { signOut } = useAuthStore();
+  // const dispatch = useDispatch();
   const [params] = useSearchParams();
 
   const navigate = useNavigate();
@@ -52,6 +55,7 @@ const SideBar = () => {
       <Button
         onClick={() => {
           signOut();
+          // dispatch(logOut());
           params.set("type", "login");
           navigate(`${AllRoutes.PUBLIC.AUTH.path}?${params.toString()}`);
         }}

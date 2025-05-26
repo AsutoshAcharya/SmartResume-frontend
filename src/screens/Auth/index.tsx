@@ -17,6 +17,9 @@ import { toast } from "react-toastify";
 import { Some } from "../../helpers/Some";
 import { useAuthStore } from "../../store";
 import { toCred } from "../../store/authStore";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { logIn } from "../../redux/authSlice";
 
 enum AuthPage {
   Login = "login",
@@ -24,6 +27,8 @@ enum AuthPage {
 }
 const Auth = () => {
   const { signIn, cred } = useAuthStore();
+  // const cred = useSelector((state: RootState) => state.auth);
+  // const dispatch = useDispatch();
   const [formData, setFormData] = useState<RForm>(emptyRegisterFormData);
   const [params] = useSearchParams();
   const isRegister = params.get("type") === AuthPage.Register;
@@ -79,9 +84,10 @@ const Auth = () => {
       apiCall({
         fn: () => AuthService.login(apiData),
         onSuccess: (res) => {
-          // const cred = toCred(res?.data?.data);
+          const creds = toCred(res);
           // console.log(res);
-          signIn(toCred(res));
+          signIn(creds);
+          // dispatch(logIn(creds));
           navigate(`${AllRoutes.PRIVATE.HOME.path}`);
           toast.success("Login Successful");
         },

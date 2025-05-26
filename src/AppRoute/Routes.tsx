@@ -5,6 +5,8 @@ import { Suspense } from "react";
 import Layout from "../Layout";
 import Loader from "../Components/Loader";
 import { useAuthStore } from "../store";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const allPublicRoutes = Object.keys(AllRoutes.PUBLIC).map(
   (kee) => AllRoutes.PUBLIC[kee as PublicRouteKeys]
@@ -15,6 +17,8 @@ const allPrivateRputes = Object.keys(AllRoutes.PRIVATE).map(
 
 const AppRoutes = () => {
   const { cred } = useAuthStore();
+  // const cred = useSelector((state: RootState) => state.auth);
+  console.log(cred);
   return (
     <>
       <BrowserRouter>
