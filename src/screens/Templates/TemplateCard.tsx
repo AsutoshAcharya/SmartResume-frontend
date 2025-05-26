@@ -17,17 +17,8 @@ const TemplateCard: FC<Props> = ({ template, onView }) => {
         <img
           src={template.image || "/placeholder.svg"}
           alt={template.name}
-          className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-80 object-cover group-hover:blur-sm group-hover:scale-105 transition-transform duration-300"
         />
-
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-          <img
-            src={template.image || "/placeholder.svg"}
-            alt=""
-            className="w-full h-full object-cover scale-110 blur-sm"
-          />
-        </div>
-
         <div className="absolute inset-0 z-20 flex items-center justify-center">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-3">
             <button
