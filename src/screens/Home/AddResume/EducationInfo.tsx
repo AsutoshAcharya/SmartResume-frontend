@@ -1,12 +1,13 @@
 import { FC, Fragment } from "react";
-import { Education, EducationKeys } from "../type";
+import { DroppableIds, Education, EducationKeys } from "../type";
 import { Button } from "../../../Components/Button";
-import { Plus, Trash2 } from "lucide-react";
+import { GripVertical, Plus, Trash2 } from "lucide-react";
 import { educationDataFields, educationDateFields } from "./DataField";
 import { TextField } from "../../../Components/TextField";
 import { DateField } from "../../../Components/DateField";
 import { Some } from "../../../helpers/Some";
 import { useViewStore } from "../../../store/viewStore";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 
 interface Props {
   educations: Array<Education>;
@@ -39,84 +40,125 @@ const EducationInfo: FC<Props> = ({
           </Button>
         </div>
       )}
-      {educations.map((data, index) => (
-        <div
-          key={index}
-          className="border border-gray-200 p-6 rounded-2xl shadow-md mb-8 bg-white relative transition hover:shadow-lg"
-        >
-          {!isViewingResume && (
-            <div className="absolute top-4 right-4">
-              <button
-                onClick={() => removeEducation(index)}
-                className="text-red-500 hover:text-red-700 cursor-pointer"
-                title="Remove experience"
+      <Droppable droppableId={DroppableIds.education}>
+        {(provided) => (
+          <div ref={provided?.innerRef}>
+            {educations.map((data, index) => (
+              <Draggable
+                key={`${DroppableIds.education}-${index}`}
+                draggableId={`${DroppableIds.education}-${index}`}
+                index={index}
               >
-                <Trash2 size={18} />
-              </button>
-            </div>
-          )}
+                {(provided) => (
+                  <div
+                    key={index}
+                    ref={provided?.innerRef}
+                    {...provided.draggableProps}
+                    className="border border-gray-200 p-6 rounded-2xl shadow-md mb-8 bg-white relative transition hover:shadow-lg"
+                  >
+                    {!isViewingResume && (
+                      <Fragment>
+                        <div
+                          className="absolute top-[50%] left-3  transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                          {...provided.dragHandleProps}
+                        >
+                          <GripVertical className="text-gray-700" />
+                        </div>
+                        <div className="absolute top-4 right-4">
+                          <button
+                            onClick={() => removeEducation(index)}
+                            className="text-red-500 hover:text-red-700 cursor-pointer"
+                            title="Remove experience"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </Fragment>
+                    )}
 
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">
-            Education {index + 1}
-          </h3>
+                    <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                      Education {index + 1}
+                    </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-2">
-            {educationDataFields.map(
-              ({ key, label, placeholder, maxLength, type, required }) => (
-                <div key={key} className="w-full">
-                  {type === "text" && (
-                    <TextField
-                      type={type}
-                      value={data[key as EducationKeys] as string}
-                      label={label}
-                      onChange={(val) =>
-                        updateEducation(index, key as EducationKeys, val)
-                      }
-                      placeholder={placeholder}
-                      maxLength={maxLength}
-                      required={required}
-                      disabled={isViewingResume}
-                    />
-                  )}
-                </div>
-              )
-            )}
-            <div className="w-full flex flex-row justify-between items-center">
-              {educationDateFields.map(
-                ({ key, label, placeholder, type, required }, idx) => {
-                  return (
-                    <Fragment key={key}>
-                      {type === "date" && (
-                        <DateField
-                          value={
-                            data[key as EducationKeys]?.toString().length > 0
-                              ? new Date(
-                                  Some.String(data[key as EducationKeys])
-                                )
-                              : undefined
-                          } //
-                          label={label}
-                          onChange={(date) =>
-                            updateEducation(
-                              index,
-                              key as EducationKeys,
-                              date?.toISOString()!
-                            )
-                          }
-                          placeholder={placeholder}
-                          required={required}
-                          className={idx === 1 ? "ml-5" : ""}
-                          disabled={isViewingResume}
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-2">
+                      {educationDataFields.map(
+                        ({
+                          key,
+                          label,
+                          placeholder,
+                          maxLength,
+                          type,
+                          required,
+                        }) => (
+                          <div key={key} className="w-full">
+                            {type === "text" && (
+                              <TextField
+                                type={type}
+                                value={data[key as EducationKeys] as string}
+                                label={label}
+                                onChange={(val) =>
+                                  updateEducation(
+                                    index,
+                                    key as EducationKeys,
+                                    val
+                                  )
+                                }
+                                placeholder={placeholder}
+                                maxLength={maxLength}
+                                required={required}
+                                disabled={isViewingResume}
+                              />
+                            )}
+                          </div>
+                        )
                       )}
-                    </Fragment>
-                  );
-                }
-              )}
-            </div>
+                      <div className="w-full flex flex-row justify-between items-center">
+                        {educationDateFields.map(
+                          (
+                            { key, label, placeholder, type, required },
+                            idx
+                          ) => {
+                            return (
+                              <Fragment key={key}>
+                                {type === "date" && (
+                                  <DateField
+                                    value={
+                                      data[key as EducationKeys]?.toString()
+                                        .length > 0
+                                        ? new Date(
+                                            Some.String(
+                                              data[key as EducationKeys]
+                                            )
+                                          )
+                                        : undefined
+                                    } //
+                                    label={label}
+                                    onChange={(date) =>
+                                      updateEducation(
+                                        index,
+                                        key as EducationKeys,
+                                        date?.toISOString()!
+                                      )
+                                    }
+                                    placeholder={placeholder}
+                                    required={required}
+                                    className={idx === 1 ? "ml-5" : ""}
+                                    disabled={isViewingResume}
+                                  />
+                                )}
+                              </Fragment>
+                            );
+                          }
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Draggable>
+            ))}
           </div>
-        </div>
-      ))}
+        )}
+      </Droppable>
     </Fragment>
   );
 };
