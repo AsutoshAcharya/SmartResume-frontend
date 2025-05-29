@@ -299,6 +299,7 @@ const AddResume = ({ open, onClose, prevResumeData }: Props) => {
           variant="secondary"
           onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
           disabled={step === 0}
+          className="w-[100px]"
         >
           Back
         </Button>
@@ -309,6 +310,7 @@ const AddResume = ({ open, onClose, prevResumeData }: Props) => {
               ? handleSubmit()
               : setStep((prev) => prev + 1)
           }
+          className="w-[100px]"
           loading={loading}
           disabled={step === steps.length - 1 && isViewingResume}
         >
