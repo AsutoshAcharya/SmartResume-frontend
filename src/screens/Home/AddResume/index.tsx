@@ -290,7 +290,7 @@ const AddResume = ({ open, onClose, prevResumeData }: Props) => {
 
       <Stepper steps={steps} current={step} />
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="overflow-y-auto max-h-[60vh]">
+        <div className="overflow-y-auto max-h-[60vh] blue-scrollbar">
           {renderStepContent()}
         </div>
       </DragDropContext>

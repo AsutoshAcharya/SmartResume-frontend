@@ -58,14 +58,17 @@ const Home = () => {
       </div>
       <Loading
         loading={isFetching}
-        className="flex grow"
+        className="flex grow min-h-0  overflow-y-auto blue-scrollbar"
         Loader={<HomeSkeleton />}
       >
         <div className="w-full">
-          <div className="p-4 grid grid-cols-3 place-content-center gap-4 w-full">
-            {filteredResumes.map((resume) => (
-              <ResumeCard key={resume.id} resume={resume} />
-            ))}
+          <div className="p-4 grid grid-cols-3 place-content-center gap-4 w-full ">
+            {filteredResumes
+              .concat(filteredResumes)
+              .concat(filteredResumes)
+              .map((resume) => (
+                <ResumeCard key={resume.id} resume={resume} />
+              ))}
           </div>
         </div>
       </Loading>

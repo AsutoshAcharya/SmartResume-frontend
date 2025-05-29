@@ -1,1 +1,134 @@
 @import "tailwindcss";
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+  border: 2px solid #f1f5f9;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #64748b;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+
+.blue-scrollbar::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border: 2px solid #f1f5f9;
+}
+
+.blue-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+.blue-scrollbar::-webkit-scrollbar-thumb:active {
+  background: #1d4ed8;
+}
+
+.blue-scrollbar {
+  scrollbar-color: #3b82f6 #f1f5f9;
+}
+
+/* Sidebar scrollbar (matches your sidebar color) */
+/* .sidebar-scrollbar::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border: 2px solid #e2e8f0;
+} */
+
+
+
+
+/* Thin scrollbar variant */
+.thin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+  border: 1px solid #f1f5f9;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Dark mode support (if you plan to add it) */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+    background: #1e293b;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #475569;
+    border: 2px solid #1e293b;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: #94a3b8;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: #1e293b;
+  }
+
+  html {
+    scrollbar-color: #475569 #1e293b;
+  }
+
+  .blue-scrollbar::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+  }
+
+  .blue-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #60a5fa;
+  }
+}
