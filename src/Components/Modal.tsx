@@ -6,9 +6,17 @@ interface Props extends Omit<HTMLAttributes<HTMLDivElement>, "className"> {
   open: boolean;
   onClose: () => void;
   className?: string;
+  closeOnOutsideClick?: boolean;
 }
 
-const Modal: FC<Props> = ({ open, onClose, className, children, ...rest }) => {
+const Modal: FC<Props> = ({
+  open,
+  onClose,
+  className,
+  children,
+  closeOnOutsideClick = true,
+  ...rest
+}) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,13 +28,13 @@ const Modal: FC<Props> = ({ open, onClose, className, children, ...rest }) => {
         onClose();
       }
     };
-    if (open) {
+    if (open && closeOnOutsideClick) {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open, onClose]);
+  }, [open, onClose, closeOnOutsideClick]);
 
   return (
     <AnimatePresence>

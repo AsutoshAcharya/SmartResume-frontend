@@ -133,6 +133,8 @@ const AddResume = ({ open, onClose, prevResumeData }: Props) => {
   };
 
   const handleSubmit = () => {
+    if (JSON.stringify(formData) === JSON.stringify(prevResumeData))
+      return toast.warn("Please make some changes before saving.");
     const payload = {
       ...cred,
       data: {
@@ -257,7 +259,7 @@ const AddResume = ({ open, onClose, prevResumeData }: Props) => {
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} closeOnOutsideClick={false}>
       <div className="flex flex-row justify-between items-center mb-4">
         <div className="flex flex-row gap-4">
           <Text weight="bold" size="xl">
