@@ -18,7 +18,7 @@ const allPrivateRputes = Object.keys(AllRoutes.PRIVATE).map(
 const AppRoutes = () => {
   const { cred } = useAuthStore();
   // const cred = useSelector((state: RootState) => state.auth);
-  console.log(cred);
+
   return (
     <>
       <BrowserRouter>
