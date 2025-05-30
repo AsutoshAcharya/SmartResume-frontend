@@ -23,7 +23,7 @@ function useGetResumes(options: Options = {}) {
   }
   async function getAllUserSpecificResume() {
     const resp = await Resume.getResumesByUserId({ ...cred });
-    console.log(resp);
+
     return Some.Array(resp?.data);
   }
   return useQuery({

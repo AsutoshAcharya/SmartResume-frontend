@@ -38,7 +38,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  console.log(cred);
+
   function handleChange<T extends keyof RForm>(key: T, value: RForm[T]) {
     setFormData((prev) => ({ ...prev, [key]: value }));
   }

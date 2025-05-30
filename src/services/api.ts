@@ -14,7 +14,6 @@ export function defaultCatch(
   error: Record<string, any>,
   reject: (val: Record<string, any>) => void
 ) {
-  console.log(error, "err apiPromise");
   if (error.response) {
     reject(error.response);
   } else if (error.request) {
@@ -29,7 +28,6 @@ export function apiPromise(request: () => Promise<AxiosResponse>) {
     request()
       .then((response) => resolve(response.data))
       .catch((error) => {
-        console.log(error);
         if (error.response) {
           reject(error.response);
         } else if (error.request) {
