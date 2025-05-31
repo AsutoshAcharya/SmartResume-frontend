@@ -5,8 +5,6 @@ import { Suspense } from "react";
 import Layout from "../Layout";
 import Loader from "../Components/Loader";
 import { useAuthStore } from "../store";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 
 const allPublicRoutes = Object.keys(AllRoutes.PUBLIC).map(
   (kee) => AllRoutes.PUBLIC[kee as PublicRouteKeys]
@@ -21,7 +19,7 @@ const AppRoutes = () => {
 
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/SmartResume-frontend">
         <Routes>
           {cred.token ? (
             <Route path="/" element={<Layout />}>
