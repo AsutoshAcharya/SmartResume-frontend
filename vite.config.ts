@@ -7,4 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react-image-lightbox"],
   },
+  base: "/SmartResume-frontend",
 });
