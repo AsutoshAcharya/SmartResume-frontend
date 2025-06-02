@@ -82,7 +82,7 @@ const ExportToPdf = ({ data }: { data: ResumeForm }) => {
         <Text style={styles.header}>{personalInfo.name}</Text>
         <View style={styles.subHeader}>
           <Text>
-            {personalInfo.address} | {personalInfo.phone} | {personalInfo.email}{" "}
+            {personalInfo.address} | {personalInfo.phone} | {personalInfo.email}
             {personalInfo.links.map((link, idx) => {
               let label = "";
               if (link.includes("linkedin.com")) label = "LinkedIn";
