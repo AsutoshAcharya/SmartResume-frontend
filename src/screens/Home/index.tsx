@@ -9,6 +9,7 @@ import Loading from "../../Components/Loading";
 import useGetResumes from "./hooks/useGetResumes";
 import AddResume from "./AddResume";
 import SearchField from "../../Components/SearchField";
+import Flex from "../../Components/Flex";
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -61,16 +62,19 @@ const Home = () => {
         className="flex grow min-h-0  overflow-y-auto blue-scrollbar"
         Loader={<HomeSkeleton />}
       >
-        <div className="w-full">
-          <div className="p-4 grid grid-cols-3 place-content-center gap-4 w-full ">
-            {filteredResumes
-              .concat(filteredResumes)
-              .concat(filteredResumes)
-              .map((resume) => (
+        {filteredResumes.length !== 0 ? (
+          <div className="w-full">
+            <div className="p-4 grid grid-cols-3 place-content-center gap-4 w-full ">
+              {filteredResumes.map((resume) => (
                 <ResumeCard key={resume.id} resume={resume} />
               ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <Flex className="grow -1 text-gray-500 font-bold justify-center items-center">
+            No Resume Found
+          </Flex>
+        )}
       </Loading>
 
       {open && <AddResume open={open} onClose={() => setOpen(false)} />}
