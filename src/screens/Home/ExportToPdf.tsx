@@ -8,6 +8,7 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import { ResumeForm } from "./type";
+import { Fragment } from "react/jsx-runtime";
 
 Font.register({
   family: "Arial",
@@ -78,13 +79,35 @@ const ExportToPdf = ({ data }: { data: ResumeForm }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header */}
         <Text style={styles.header}>{personalInfo.name}</Text>
-        <Text style={styles.subHeader}>
-          {personalInfo.address}, {personalInfo.phone}, {personalInfo.email}
-        </Text>
+        <View style={styles.subHeader}>
+          <Text>
+            {personalInfo.address} | {personalInfo.phone} | {personalInfo.email}{" "}
+            {personalInfo.links.map((link, idx) => {
+              let label = "";
+              if (link.includes("linkedin.com")) label = "LinkedIn";
+              else if (link.includes("github.com")) label = "GitHub";
+              else label = link;
+              return (
+                <Fragment key={idx}>
+                  <Text style={{ marginHorizontal: 2 }}>&nbsp;|&nbsp;</Text>
+                  <Link
+                    src={link}
+                    style={{
+                      color: "black",
+                      textDecorationColor: "black",
+                      fontSize: 9,
+                      marginRight: 4,
+                    }}
+                  >
+                    {label}
+                  </Link>
+                </Fragment>
+              );
+            })}
+          </Text>
+        </View>
 
-        {/* Experience */}
         <Text style={styles.sectionTitle}>Experience</Text>
         {experience.map((exp, idx) => (
           <View key={idx} style={styles.section}>
@@ -116,17 +139,38 @@ const ExportToPdf = ({ data }: { data: ResumeForm }) => {
           <View key={idx} style={styles.section}>
             <View style={styles.row}>
               <Text style={styles.bold}>{proj.title}</Text>
-              {/* Use Link component for clickable GitHub repo */}
-              <Link
-                src={proj.repoLink}
-                style={{
-                  color: "blue",
-                  textDecoration: "underline",
-                  fontSize: 9,
-                }}
-              >
-                GitHub Repo
-              </Link>
+              {(proj.projectLink || proj.repoLink) && (
+                <View style={{ flexDirection: "row", gap: 4 }}>
+                  {proj.projectLink && (
+                    <Link
+                      src={proj.projectLink}
+                      style={{
+                        color: "blue",
+                        textDecoration: "underline",
+                        fontSize: 9,
+                        marginRight: 4,
+                      }}
+                    >
+                      Live
+                    </Link>
+                  )}
+                  {proj.projectLink && proj.repoLink && (
+                    <Text style={{ fontSize: 9, marginRight: 4 }}>|</Text>
+                  )}
+                  {proj.repoLink && (
+                    <Link
+                      src={proj.repoLink}
+                      style={{
+                        color: "blue",
+                        textDecoration: "underline",
+                        fontSize: 9,
+                      }}
+                    >
+                      GitHub
+                    </Link>
+                  )}
+                </View>
+              )}
             </View>
             <View style={styles.bulletList}>
               {proj.descriptions.map((desc, i) => (

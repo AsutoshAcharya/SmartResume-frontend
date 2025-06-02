@@ -1,5 +1,4 @@
-"use client";
-
+import template1Img from "../../assets/Template1.png";
 import { useState } from "react";
 import Modal from "../../Components/Modal";
 import { X } from "lucide-react";
@@ -10,7 +9,7 @@ const templateList: Array<Template> = [
   {
     id: "template1",
     name: "Modern Professional",
-    image: "/Template1.png",
+    image: template1Img,
     category: "Professional",
     rating: 4.8,
     downloads: "12.5k",
