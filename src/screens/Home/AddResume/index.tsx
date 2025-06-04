@@ -266,6 +266,11 @@ const AddResume = ({ open, onClose, prevResumeData }: Props) => {
           if (step === steps.length - 1) return handleSubmit();
           setStep((prev) => prev + 1);
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+          }
+        }}
       >
         <div className="flex flex-row justify-between items-center mb-4">
           <div className="flex flex-row gap-4">

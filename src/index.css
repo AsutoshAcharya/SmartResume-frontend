@@ -1,5 +1,7 @@
 @import "tailwindcss";
-
+body{
+  font-family:sans-serif;
+}
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -53,15 +55,6 @@ html {
   scrollbar-color: #3b82f6 #f1f5f9;
 }
 
-/* Sidebar scrollbar (matches your sidebar color) */
-/* .sidebar-scrollbar::-webkit-scrollbar-track {
-  background: #e2e8f0;
-}
-
-.sidebar-scrollbar::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-  border: 2px solid #e2e8f0;
-} */
 
 
 

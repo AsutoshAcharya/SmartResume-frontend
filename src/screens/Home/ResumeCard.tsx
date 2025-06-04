@@ -19,7 +19,8 @@ import AddResume from "./AddResume";
 import { pdf } from "@react-pdf/renderer";
 import ExportToPdf from "./ExportToPdf";
 import { useViewStore } from "../../store/viewStore";
-
+import moment from "moment";
+import getDateKey from "../../helpers/getDateKey";
 interface Props {
   resume: ResumeForm;
   className?: string;
@@ -109,12 +110,12 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
                   {resume.title}
                 </h3>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              {/* <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Calendar className="w-4 h-4" />
                 <span>
                   Updated {new Date(resume.updatedAt).toLocaleDateString()}
                 </span>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -123,12 +124,16 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="text-center p-3 bg-gray-50 rounded-lg">
               <div className="text-lg font-bold text-gray-900">
-                {new Date(resume.createdAt).toLocaleDateString()}
+                {moment(resume.createdAt).format("MMM DD, YYYY [at] hh:mm a")}
               </div>
               <div className="text-xs text-gray-600">Created</div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-lg font-bold text-gray-900">Recently</div>
+              <div className="text-lg font-bold text-gray-900">
+                {getDateKey(resume.updatedAt) !== getDateKey(resume.createdAt)
+                  ? moment(resume.updatedAt).format("MMM DD, YYYY [at] hh:mm a")
+                  : "Not Modified"}
+              </div>
               <div className="text-xs text-gray-600">Last Modified</div>
             </div>
           </div>
@@ -158,7 +163,7 @@ const ResumeCard: FC<Props> = ({ resume, className = "" }) => {
                 key={action.state}
                 onClick={action.onClick}
                 className={clsx(
-                  "flex-1 flex items-center cursor-pointer justify-center gap-2 p-2 rounded-lg font-medium transition-all duration-200 text-sm",
+                  "flex-1 flex items-center cursor-pointer justify-center gap-2 p-3 rounded-lg font-medium transition-all duration-200 text-sm",
                   action.color === "yellow" &&
                     "bg-yellow-50 text-yellow-700 hover:bg-yellow-100",
                   action.color === "red" &&

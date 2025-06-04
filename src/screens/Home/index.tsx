@@ -23,6 +23,7 @@ const Home = () => {
       r.title.toLowerCase().includes(search.toLowerCase())
     );
   }, [resumeData]);
+  console.log(filteredResumes);
   return (
     <div className="h-full p-4 flex flex-col">
       <div className="flex items-center gap-4">
