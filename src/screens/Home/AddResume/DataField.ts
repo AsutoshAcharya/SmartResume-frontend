@@ -66,6 +66,7 @@ export const personalInfoFields: Array<Field> = [
     key: "name",
     type: "text",
     placeholder: "Enter name",
+    required: true,
   },
   {
     label: "Address",
@@ -80,12 +81,14 @@ export const personalInfoFields: Array<Field> = [
     type: "number",
     placeholder: "Enter phone no.",
     maxLength: 10,
+    required: true,
   },
   {
     label: "Email",
     key: "email",
     type: "text",
     placeholder: "Enter email",
+    required: true,
   },
 ];
 

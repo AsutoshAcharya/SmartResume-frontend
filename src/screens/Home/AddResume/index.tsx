@@ -260,63 +260,67 @@ const AddResume = ({ open, onClose, prevResumeData }: Props) => {
 
   return (
     <Modal open={open} onClose={onClose} closeOnOutsideClick={false}>
-      <div className="flex flex-row justify-between items-center mb-4">
-        <div className="flex flex-row gap-4">
-          <Text weight="bold" size="xl">
-            {formData.id !== ""
-              ? isViewingResume
-                ? "View Resume"
-                : "Edit Resume"
-              : "Add Resume"}
-          </Text>
-          <TextField
-            value={formData.title}
-            placeholder="Enter Resume Title"
-            type="text"
-            maxLength={50}
-            width={80}
-            onChange={(val) => setFormData({ ...formData, title: val })}
-            disabled={isViewingResume}
-          />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (step === steps.length - 1) return handleSubmit();
+          setStep((prev) => prev + 1);
+        }}
+      >
+        <div className="flex flex-row justify-between items-center mb-4">
+          <div className="flex flex-row gap-4">
+            <Text weight="bold" size="xl">
+              {formData.id !== ""
+                ? isViewingResume
+                  ? "View Resume"
+                  : "Edit Resume"
+                : "Add Resume"}
+            </Text>
+            <TextField
+              value={formData.title}
+              placeholder="Enter Resume Title"
+              type="text"
+              maxLength={50}
+              width={80}
+              onChange={(val) => setFormData({ ...formData, title: val })}
+              disabled={isViewingResume}
+            />
+          </div>
+
+          <button
+            className="rounded-full hover:bg-blue-200 text-gray-400 transition cursor-pointer"
+            onClick={onClose}
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        <button
-          className="rounded-full hover:bg-blue-200 text-gray-400 transition cursor-pointer"
-          onClick={onClose}
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
-
-      <Stepper steps={steps} current={step} />
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="overflow-y-auto max-h-[60vh] blue-scrollbar">
-          {renderStepContent()}
+        <Stepper steps={steps} current={step} />
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="overflow-y-auto max-h-[60vh] blue-scrollbar">
+            {renderStepContent()}
+          </div>
+        </DragDropContext>
+        <div className="flex justify-between mt-6">
+          <Button
+            variant="secondary"
+            onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
+            disabled={step === 0}
+            className="w-[100px]"
+          >
+            Back
+          </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-[100px]"
+            loading={loading}
+            disabled={step === steps.length - 1 && isViewingResume}
+          >
+            {step === steps.length - 1 ? "Submit" : "Next"}
+          </Button>
         </div>
-      </DragDropContext>
-      <div className="flex justify-between mt-6">
-        <Button
-          variant="secondary"
-          onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
-          disabled={step === 0}
-          className="w-[100px]"
-        >
-          Back
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() =>
-            step === steps.length - 1
-              ? handleSubmit()
-              : setStep((prev) => prev + 1)
-          }
-          className="w-[100px]"
-          loading={loading}
-          disabled={step === steps.length - 1 && isViewingResume}
-        >
-          {step === steps.length - 1 ? "Submit" : "Next"}
-        </Button>
-      </div>
+      </form>
     </Modal>
   );
 };

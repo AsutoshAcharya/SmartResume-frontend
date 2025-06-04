@@ -26,7 +26,7 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
     <Fragment>
       <div className="grid grid-cols-2 gap-4 p-2">
         {personalInfoFields.map(
-          ({ key, label, placeholder, maxLength, type }) => (
+          ({ key, label, placeholder, maxLength, type, required }) => (
             <div key={key}>
               <TextField
                 type={type}
@@ -36,6 +36,7 @@ const PersonalInfo: FC<Props> = ({ data, update }) => {
                 placeholder={placeholder}
                 maxLength={maxLength}
                 className="border-b"
+                required={required}
                 disabled={isViewingResume}
               />
             </div>
