@@ -17,18 +17,14 @@ import { toast } from "react-toastify";
 import { Some } from "../../helpers/Some";
 import { useAuthStore } from "../../store";
 import { toCred } from "../../store/authStore";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { logIn } from "../../redux/authSlice";
 
 enum AuthPage {
   Login = "login",
   Register = "register",
 }
+
 const Auth = () => {
-  const { signIn, cred } = useAuthStore();
-  // const cred = useSelector((state: RootState) => state.auth);
-  // const dispatch = useDispatch();
+  const { signIn } = useAuthStore();
   const [formData, setFormData] = useState<RForm>(emptyRegisterFormData);
   const [params] = useSearchParams();
   const isRegister = params.get("type") === AuthPage.Register;
@@ -36,22 +32,17 @@ const Auth = () => {
   const [errors, setErrors] = useState<Record<string, string>>(emptyErrors);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
-  function handleChange<T extends keyof RForm>(key: T, value: RForm[T]) {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-  }
-
-  function handleBlur<T extends keyof RForm>(key: T) {
+  function validateField<T extends keyof RForm>(key: T, value: RForm[T]) {
     let error = "";
-    let kee = key as Exclude<keyof RForm, "avatar">;
-    const value = formData[kee];
-    switch (kee) {
+    if (key === "avatar") return error;
+
+    switch (key) {
       case "name":
         error =
-          value.length >= 4
-            ? value.length <= 50
+          value?.toString()?.length! >= 4
+            ? value?.toString()?.length! <= 50
               ? ""
               : "Name must have maximum 50 characters"
             : "Name must have minimum 4 characters";
@@ -68,12 +59,29 @@ const Auth = () => {
             : "Password must be at least 6 characters";
         break;
     }
+
+    return error;
+  }
+
+  function handleChange<T extends keyof RForm>(key: T, value: RForm[T]) {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+
+    if (errors[key]) {
+      const newError = validateField(key, value);
+      setErrors((prev) => ({ ...prev, [key]: newError }));
+    }
+  }
+
+  function handleBlur<T extends keyof RForm>(key: T) {
+    const value = formData[key];
+    const error = validateField(key, value);
     setErrors((prev) => ({ ...prev, [key]: error }));
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
+
     if (!isRegister) {
       const apiData = {
         data: {
@@ -81,18 +89,16 @@ const Auth = () => {
           password: formData.password,
         },
       };
+
       apiCall({
         fn: () => AuthService.login(apiData),
         onSuccess: (res) => {
           const creds = toCred(res);
-          // console.log(res);
           signIn(creds);
-          // dispatch(logIn(creds));
           navigate(`${AllRoutes.PRIVATE.HOME.path}`);
           toast.success("Login Successful");
         },
         onError: (d) => {
-          // console.warn(d);
           toast.error(d?.message || "Something went wrong", {
             toastId: "error",
           });
@@ -101,6 +107,7 @@ const Auth = () => {
       });
       return;
     }
+
     try {
       let avatarUrl = "";
       if (formData.avatar) {
@@ -110,7 +117,6 @@ const Auth = () => {
         fd.append("cloud_name", "dtl3zxaep");
 
         const resp = await AuthService.uploadFile({ data: fd });
-
         avatarUrl = resp.data.secure_url || resp.data.url;
       }
 
@@ -122,25 +128,23 @@ const Auth = () => {
           avatar: avatarUrl,
         },
       };
+
       await AuthService.register(registrationData);
       toast.success("Registration successful");
       params.set("type", AuthPage.Login);
       navigate(`${AllRoutes.PUBLIC.AUTH.path}?${params.toString()}`);
     } catch (err: any) {
-      console.warn(err);
       toast.error(
         Array.isArray(err?.message)
           ? Some.Array(err?.message).join(",")
           : err?.data?.message || "Something went wrong"
       );
-      console.error(err);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    // <WrapperLoader loading={loading}>
     <div className="w-screen h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex justify-center items-center p-4">
       <motion.form
         onSubmit={handleSubmit}
@@ -204,6 +208,7 @@ const Auth = () => {
                 Avatar
               </label>
               <input
+                key={preview?.toString()}
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
@@ -237,7 +242,7 @@ const Auth = () => {
         <Button
           type="submit"
           disabled={Object.values(errors).some((err) => err) || loading}
-          className={`w-full py-2 px-4 text-white rounded-xl font-medium shadow-sm transition cursor-pointer`}
+          className="w-full py-2 px-4 text-white rounded-xl font-medium shadow-sm transition cursor-pointer"
           loading={loading}
         >
           {!isRegister ? "Login" : "Register"}
@@ -263,14 +268,15 @@ const Auth = () => {
               navigate(`${AllRoutes.PUBLIC.AUTH.path}?${params.toString()}`);
               setFormData(emptyRegisterFormData);
               setErrors(emptyErrors);
+              setPreview(null);
             }}
+            disabled={loading}
           >
             {!isRegister ? "Register" : "Login"}
           </button>
         </div>
       </motion.form>
     </div>
-    // </WrapperLoader>
   );
 };
 
