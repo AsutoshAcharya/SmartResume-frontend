@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import Layout from "../Layout";
 import Loader from "../Components/Loader";
 import { useAuthStore } from "../store";
+import Test from "../screens/Test";
 
 const allPublicRoutes = Object.keys(AllRoutes.PUBLIC).map(
   (kee) => AllRoutes.PUBLIC[kee as PublicRouteKeys]
@@ -16,7 +17,7 @@ const allPrivateRputes = Object.keys(AllRoutes.PRIVATE).map(
 const AppRoutes = () => {
   const { cred } = useAuthStore();
   // const cred = useSelector((state: RootState) => state.auth);
-
+  const isRunningLocally = window.location.href.includes("localhost");
   return (
     <>
       <BrowserRouter basename="/SmartResume-frontend">
@@ -36,6 +37,12 @@ const AppRoutes = () => {
             path="*"
             element={<Navigate to={cred.token ? "/" : "/auth"} replace />}
           />
+          {isRunningLocally &&
+            GetRoute({
+              title: "test",
+              path: "/test",
+              Element: Test,
+            })}
         </Routes>
       </BrowserRouter>
     </>
